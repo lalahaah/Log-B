@@ -18,7 +18,8 @@ import {
   ChevronRight,
   CalendarCheck,
   History,
-  Sparkles
+  Sparkles,
+  Mail
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -66,6 +67,7 @@ interface Contact {
   company: string;
   position?: string;
   phone?: string;
+  email?: string;
   tags?: string[];
   nextSchedule?: string;
   createdAt: string;
@@ -165,8 +167,12 @@ export default function App() {
     if (!user) return;
     const fd = new FormData(e.currentTarget);
     const data = {
-      name: fd.get('name'), company: fd.get('company'), position: fd.get('position'),
-      phone: fd.get('phone'), tags: fd.get('tags')?.toString().split(',').map(t => t.trim()).filter(t => t) || [],
+      name: fd.get('name'),
+      company: fd.get('company'),
+      position: fd.get('position'),
+      phone: fd.get('phone'),
+      email: fd.get('email'),
+      tags: fd.get('tags')?.toString().split(',').map(t => t.trim()).filter(t => t) || [],
       createdAt: new Date().toISOString()
     };
     await addDoc(collection(db, 'artifacts', appId, 'users', user.uid, 'contacts'), data);
@@ -508,9 +514,15 @@ export default function App() {
                       <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-4">Position</label>
                       <input name="position" className="w-full p-4 bg-slate-50 rounded-[20px] border-none focus:ring-4 focus:ring-primary/10 font-bold text-sm" />
                     </div>
-                    <div className="space-y-1.5">
-                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-4">Contact</label>
-                      <input name="phone" className="w-full p-4 bg-slate-50 rounded-[20px] border-none focus:ring-4 focus:ring-primary/10 font-bold text-sm" />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-4">Phone Number</label>
+                        <input name="phone" placeholder="010-0000-0000" className="w-full p-4 bg-slate-50 rounded-[20px] border-none focus:ring-4 focus:ring-primary/10 font-bold text-sm" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-4">Email Address</label>
+                        <input type="email" name="email" placeholder="example@logb.ai" className="w-full p-4 bg-slate-50 rounded-[20px] border-none focus:ring-4 focus:ring-primary/10 font-bold text-sm" />
+                      </div>
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-4">Tags (Comma separated)</label>
@@ -607,20 +619,30 @@ const ContactCard = ({ contact, onAddLog, onDelete }: { contact: any, onAddLog: 
         <span key={idx} className="text-[9px] bg-slate-50 text-slate-500 px-3 py-1 rounded-lg font-black uppercase tracking-widest border border-slate-100">#{tag}</span>
       ))}
     </div>
-    <div className="pt-4 md:pt-6 border-t border-slate-50 flex justify-between items-center">
-      <div className="flex items-center gap-1.5 text-slate-300">
-        <Clock size={12} />
-        <p className="text-[9px] font-black uppercase tracking-wider">{contact.phone || "No Number"}</p>
-      </div>
-      {contact.nextSchedule ? (
-        <div className="flex items-center gap-1.5 text-white font-black text-[9px] bg-primary px-4 py-2 rounded-full shadow-lg shadow-primary/10 uppercase tracking-widest">
-          {contact.nextSchedule}
+    <div className="pt-4 md:pt-6 border-t border-slate-50 flex flex-col gap-3">
+      <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-1.5 text-slate-400">
+          <div className="flex items-center gap-2">
+            <Clock size={12} className="text-slate-300" />
+            <p className="text-[9px] font-black uppercase tracking-wider">{contact.phone || "No Number"}</p>
+          </div>
+          {contact.email && (
+            <div className="flex items-center gap-2">
+              <Mail size={12} className="text-slate-300" />
+              <p className="text-[9px] font-black uppercase tracking-wider truncate max-w-[150px]">{contact.email}</p>
+            </div>
+          )}
         </div>
-      ) : (
-        <button onClick={onAddLog} className="text-[9px] font-black text-slate-400 hover:text-primary flex items-center gap-1.5 uppercase tracking-widest border border-slate-100 px-3 py-2 rounded-full hover:bg-primary/5 transition-all">
-          <Plus size={12} /> Add Log
-        </button>
-      )}
+        {contact.nextSchedule ? (
+          <div className="flex items-center gap-1.5 text-white font-black text-[9px] bg-primary px-4 py-2 rounded-full shadow-lg shadow-primary/10 uppercase tracking-widest">
+            {contact.nextSchedule}
+          </div>
+        ) : (
+          <button onClick={onAddLog} className="text-[9px] font-black text-slate-400 hover:text-primary flex items-center gap-1.5 uppercase tracking-widest border border-slate-100 px-3 py-2 rounded-full hover:bg-primary/5 transition-all">
+            <Plus size={12} /> Add Log
+          </button>
+        )}
+      </div>
     </div>
   </div>
 );

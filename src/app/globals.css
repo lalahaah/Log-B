@@ -2,14 +2,23 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1e293b; /* Deep Slate as default text */
+  --royal-blue: #2563eb;
+  --indigo-night: #4f46e5;
+  --deep-slate: #1e293b;
+  --neon-lime: #ccff00;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--royal-blue);
+  --color-secondary: var(--indigo-night);
+  --color-accent: var(--neon-lime);
+  --color-slate: var(--deep-slate);
+  
+  --font-inter: var(--font-inter);
+  --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {

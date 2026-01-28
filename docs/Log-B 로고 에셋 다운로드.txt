@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log:B Brand Assets Download</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .logo-text { font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.05em; }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Log:B Brand Assets</h1>
+                <p class="text-slate-500 mt-2 font-medium">바탕색이 있는 심볼과 텍스트가 결합된 공식 로고 에셋입니다.</p>
+            </div>
+            <div class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+                Official Version 1.2
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- 1. Primary Full Logo (Horizontal with Container) -->
+            <div class="bg-white rounded-[40px] p-8 shadow-sm border border-slate-200 flex flex-col h-full transition-all hover:shadow-xl">
+                <div class="flex-1 flex items-center justify-center p-6 bg-slate-50 rounded-[24px] mb-6 min-h-[160px]" id="logo-container-1">
+                    <svg width="240" height="80" viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg" id="svg-logo-1">
+                        <defs>
+                            <linearGradient id="grad_blue_main" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#4F46E5" />
+                                <stop offset="100%" stop-color="#2563EB" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Symbol Container -->
+                        <rect x="10" y="10" width="60" height="60" rx="18" fill="url(#grad_blue_main)" />
+                        <!-- B Symbol inside (Centered) -->
+                        <g transform="translate(19.875, 19.875) scale(0.35)">
+                            <path d="M35 25V75M48 25H58C68 25 75 32 75 40C75 48 68 55 58 55M48 55H62C72 55 80 62 80 72C80 82 72 90 62 90" 
+                                  stroke="white" stroke-width="12" stroke-linecap="round" fill="none"/>
+                        </g>
+                        <!-- Text -->
+                        <text x="85" y="52" fill="#1E293B" class="logo-text" style="font-size: 42px; font-family: Inter, sans-serif; font-weight: 900;">Log<tspan fill="#2563EB">:</tspan>B</text>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-slate-800 mb-1">Primary Signature (Full)</h3>
+                <p class="text-xs text-slate-400 mb-6">바탕색 심볼이 포함된 메인 시그니처 로고</p>
+                <div class="grid grid-cols-2 gap-2 mt-auto">
+                    <button onclick="downloadSVG('svg-logo-1', 'LogB_Signature_Full')" class="py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-blue-600 transition-colors">SVG 다운로드</button>
+                    <button onclick="downloadPNG('svg-logo-1', 'LogB_Signature_Full')" class="py-3 bg-slate-100 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-200 transition-colors">PNG 다운로드</button>
+                </div>
+            </div>
+
+            <!-- 2. Symbol Only (App Icon) -->
+            <div class="bg-white rounded-[40px] p-8 shadow-sm border border-slate-200 flex flex-col h-full transition-all hover:shadow-xl">
+                <div class="flex-1 flex items-center justify-center p-6 bg-slate-50 rounded-[24px] mb-6 min-h-[160px]">
+                    <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" id="svg-logo-2">
+                        <defs>
+                            <linearGradient id="grad_blue_icon" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#4F46E5" />
+                                <stop offset="100%" stop-color="#2563EB" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="100" height="100" rx="28" fill="url(#grad_blue_icon)" />
+                        <!-- B Symbol inside (Centered) -->
+                        <g transform="translate(12.625, 12.625) scale(0.65)">
+                            <path d="M35 25V75M48 25H58C68 25 75 32 75 40C75 48 68 55 58 55M48 55H62C72 55 80 62 80 72C80 82 72 90 62 90" 
+                                  stroke="white" stroke-width="11" stroke-linecap="round" fill="none" />
+                        </g>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-slate-800 mb-1">App Icon Symbol</h3>
+                <p class="text-xs text-slate-400 mb-6">독립적인 아이콘으로 사용되는 형태</p>
+                <div class="grid grid-cols-2 gap-2 mt-auto">
+                    <button onclick="downloadSVG('svg-logo-2', 'LogB_AppIcon')" class="py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-blue-600 transition-colors">SVG 다운로드</button>
+                    <button onclick="downloadPNG('svg-logo-2', 'LogB_AppIcon')" class="py-3 bg-slate-100 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-200 transition-colors">PNG 다운로드</button>
+                </div>
+            </div>
+
+            <!-- 3. Dark Theme Signature -->
+            <div class="bg-[#1E293B] rounded-[40px] p-8 shadow-sm flex flex-col h-full transition-all hover:shadow-xl">
+                <div class="flex-1 flex items-center justify-center p-6 bg-slate-800/50 rounded-[24px] mb-6 min-h-[160px]">
+                    <svg width="240" height="80" viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg" id="svg-logo-3">
+                        <rect x="10" y="10" width="60" height="60" rx="18" fill="#2563EB" />
+                        <!-- B Symbol inside (Centered) -->
+                        <g transform="translate(19.875, 19.875) scale(0.35)">
+                            <path d="M35 25V75M48 25H58C68 25 75 32 75 40C75 48 68 55 58 55M48 55H62C72 55 80 62 80 72C80 82 72 90 62 90" 
+                                  stroke="white" stroke-width="12" stroke-linecap="round" fill="none"/>
+                        </g>
+                        <text x="85" y="52" fill="white" class="logo-text" style="font-size: 42px; font-family: Inter, sans-serif; font-weight: 900;">Log<tspan fill="#3B82F6">:</tspan>B</text>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-white mb-1">Dark Mode Signature</h3>
+                <p class="text-xs text-slate-400 mb-6">어두운 배경 인터페이스용 시그니처</p>
+                <div class="grid grid-cols-2 gap-2 mt-auto">
+                    <button onclick="downloadSVG('svg-logo-3', 'LogB_Dark_Signature')" class="py-3 bg-white text-slate-900 rounded-xl text-xs font-bold hover:bg-blue-100 transition-colors">SVG 다운로드</button>
+                    <button onclick="downloadPNG('svg-logo-3', 'LogB_Dark_Signature')" class="py-3 bg-slate-700 text-white rounded-xl text-xs font-bold hover:bg-slate-600 transition-colors">PNG 다운로드</button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 border-t border-slate-200 pt-10 text-center">
+            <p class="text-sm text-slate-400 font-medium">Log:B Brand Asset Management Kit &copy; 2024</p>
+        </footer>
+    </div>
+
+    <canvas id="export-canvas" class="hidden"></canvas>
+
+    <script>
+        function downloadSVG(id, filename) {
+            const svg = document.getElementById(id);
+            const serializer = new XMLSerializer();
+            let source = serializer.serializeToString(svg);
+            
+            if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+                source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+            }
+            if(!source.match(/^<svg[^>]+xmlns\:xlink="http\:\/\/www\.w3\.org\/1999\/xlink"/)){
+                source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+            }
+
+            source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+            const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
+            
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = filename + ".svg";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadPNG(id, filename) {
+            const svg = document.getElementById(id);
+            const canvas = document.getElementById('export-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const img = new Image();
+            const svgSize = svg.getBoundingClientRect();
+            
+            const scale = 4;
+            canvas.width = svgSize.width * scale;
+            canvas.height = svgSize.height * scale;
+            
+            img.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.scale(scale, scale);
+                ctx.drawImage(img, 0, 0);
+                
+                const pngUrl = canvas.toDataURL("image/png");
+                const link = document.createElement("a");
+                link.href = pngUrl;
+                link.download = filename + ".png";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+            
+            img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
+        }
+    </script>
+</body>
+</html>

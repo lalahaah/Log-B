@@ -1,9 +1,0 @@
-<?xml version="1.0" standalone="no"?>
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="240" height="80" viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg" id="svg-logo-3">
-                        <rect x="10" y="10" width="60" height="60" rx="18" fill="#2563EB"/>
-                        <!-- B Symbol inside (Centered) -->
-                        <g transform="translate(19.875, 19.875) scale(0.35)">
-                            <path d="M35 25V75M48 25H58C68 25 75 32 75 40C75 48 68 55 58 55M48 55H62C72 55 80 62 80 72C80 82 72 90 62 90" stroke="white" stroke-width="12" stroke-linecap="round" fill="none"/>
-                        </g>
-                        <text x="85" y="52" fill="white" class="logo-text" style="font-size: 42px; font-family: Inter, sans-serif; font-weight: 900;">Log<tspan fill="#3B82F6">:</tspan>B</text>
-                    </svg>

@@ -1,0 +1,23 @@
+{
+    "name": "Log:B - 비즈니스 인텔리전스 로그",
+    "short_name": "Log:B",
+    "description": "영업 전문직과 사업가를 위한 기록 기반 지능형 비서, 로그비",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2563eb",
+    "icons": [
+        {
+            "src": "/LogB_AppIcon.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/LogB_AppIcon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

@@ -464,9 +464,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] font-pretendard selection:bg-primary/10">
+    <div className="flex flex-col h-screen bg-[#FDFDFD] font-pretendard selection:bg-primary/10 no-select">
       {/* Navbar */}
-      <header className="sticky top-0 z-40 w-full bg-white/70 backdrop-blur-xl border-b border-slate-100">
+      <header className="fixed top-0 z-40 w-full bg-white/70 backdrop-blur-xl border-b border-slate-100 safe-top">
         <div className="max-w-screen-xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center cursor-pointer" onClick={() => setActiveTab('contacts')}>
             <LogBLogo variant="horizontal" />
@@ -538,205 +538,205 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-screen-xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
+      {/* Main Content Area - Scrollable */}
+      <main className="app-scroll-area pt-16 pb-32 md:pb-8">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
 
-        {/* Dashboard Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-          <StatCard
-            label="총 파트너" value={contacts.length} icon={<Users />}
-            active={activeTab === 'contacts'} onClick={() => setActiveTab('contacts')}
-          />
-          <StatCard
-            label="남은 일정" value={contacts.filter(c => c.nextSchedule).length} icon={<CalendarCheck />}
-            active={activeTab === 'schedule'} onClick={() => setActiveTab('schedule')}
-          />
-          <StatCard
-            label="기록된 로그" value={meetings.length} icon={<MessageSquare />}
-            active={activeTab === 'meetings'} onClick={() => setActiveTab('meetings')}
-          />
-        </section>
+          {/* Dashboard Grid */}
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+            <StatCard
+              label="총 파트너" value={contacts.length} icon={<Users />}
+              active={activeTab === 'contacts'} onClick={() => setActiveTab('contacts')}
+            />
+            <StatCard
+              label="남은 일정" value={contacts.filter(c => c.nextSchedule).length} icon={<CalendarCheck />}
+              active={activeTab === 'schedule'} onClick={() => setActiveTab('schedule')}
+            />
+            <StatCard
+              label="기록된 로그" value={meetings.length} icon={<MessageSquare />}
+              active={activeTab === 'meetings'} onClick={() => setActiveTab('meetings')}
+            />
+          </section>
 
-        <div className="flex flex-col lg:flex-row gap-10">
-          {/* Sidebar */}
-          <aside className="lg:w-72 shrink-0 space-y-6">
-            <Card className="rounded-3xl border-slate-100 shadow-sm overflow-hidden">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none">검색 필터</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4" />
-                  <Input
-                    value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                    placeholder="이름, 거래처, 태그..."
-                    className="pl-9 h-10 rounded-xl bg-slate-50 border-none text-xs font-medium"
-                  />
-                </div>
-                <div className="flex flex-wrap gap-1.5 pt-2">
-                  {['#중요', '#VIP', '#Potential'].map(tag => (
-                    <Badge
-                      key={tag} variant="secondary"
-                      className="rounded-lg px-2 py-0.5 text-[9px] font-bold cursor-pointer hover:bg-primary/10 transition-colors"
-                      onClick={() => setSearchQuery(tag.replace('#', ''))}
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hidden md:block rounded-3xl border-slate-100 shadow-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none">데이터 도구</CardTitle>
-              </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-2">
-                <Button
-                  variant="outline" size="sm" className="rounded-xl h-20 flex-col gap-2 font-bold text-[10px] border-slate-100"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <Upload className="w-5 h-5 text-slate-400" /> 가져오기
-                </Button>
-                <Button
-                  variant="outline" size="sm" className="rounded-xl h-20 flex-col gap-2 font-bold text-[10px] border-slate-100"
-                  onClick={() => downloadCSV(contacts, 'LogB_Data')}
-                >
-                  <Download className="w-5 h-5 text-slate-400" /> 내보내기
-                </Button>
-                <input type="file" ref={fileInputRef} className="hidden" />
-              </CardContent>
-            </Card>
-          </aside>
-
-          {/* View Container */}
-          <div className="flex-1">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsContent value="contacts" className="mt-0 space-y-4 animate-in fade-in duration-500">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {filteredContacts.length === 0 ? (
-                    <Card className="col-span-full border-dashed p-12 flex flex-col items-center text-center space-y-4 rounded-3xl">
-                      <Users className="w-12 h-12 text-slate-200" />
-                      <div className="space-y-1">
-                        <p className="text-slate-500 font-bold">검색 결과가 없거나 등록된 거래처가 없습니다.</p>
-                        <p className="text-slate-300 text-xs font-medium">새로운 비즈니스 인연을 기록해 보세요.</p>
-                      </div>
-                      <Button variant="outline" size="sm" onClick={() => setIsContactModalOpen(true)} className="rounded-full">
-                        첫 거래처 등록
-                      </Button>
-                    </Card>
-                  ) : (
-                    filteredContacts.map(c => (
-                      <ContactCard
-                        key={c.id} contact={c}
-                        onAddLog={() => { setSelectedContactId(c.id); setIsMeetingModalOpen(true); }}
-                        onDelete={() => deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'contacts', c.id))}
-                      />
-                    ))
-                  )}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="schedule" className="mt-0 space-y-8 animate-in fade-in duration-500">
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 px-2">
-                    <CalendarCheck className="text-primary w-5 h-5" />
-                    <h3 className="text-lg font-bold tracking-tight">전략적 예정 일정</h3>
+          <div className="flex flex-col lg:flex-row gap-10">
+            {/* Sidebar */}
+            <aside className="lg:w-72 shrink-0 space-y-6">
+              <Card className="rounded-3xl border-slate-100 shadow-sm overflow-hidden">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none">검색 필터</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4" />
+                    <Input
+                      value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                      placeholder="이름, 거래처, 태그..."
+                      className="pl-9 h-10 rounded-xl bg-slate-50 border-none text-xs font-medium"
+                    />
                   </div>
+                  <div className="flex flex-wrap gap-1.5 pt-2">
+                    {['#중요', '#VIP', '#Potential'].map(tag => (
+                      <Badge
+                        key={tag} variant="secondary"
+                        className="rounded-lg px-2 py-0.5 text-[9px] font-bold cursor-pointer hover:bg-primary/10 transition-colors"
+                        onClick={() => setSearchQuery(tag.replace('#', ''))}
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="hidden md:block rounded-3xl border-slate-100 shadow-sm">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none">데이터 도구</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 gap-2">
+                  <Button
+                    variant="outline" size="sm" className="rounded-xl h-20 flex-col gap-2 font-bold text-[10px] border-slate-100"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="w-5 h-5 text-slate-400" /> 가져오기
+                  </Button>
+                  <Button
+                    variant="outline" size="sm" className="rounded-xl h-20 flex-col gap-2 font-bold text-[10px] border-slate-100"
+                    onClick={() => downloadCSV(contacts, 'LogB_Data')}
+                  >
+                    <Download className="w-5 h-5 text-slate-400" /> 내보내기
+                  </Button>
+                  <input type="file" ref={fileInputRef} className="hidden" />
+                </CardContent>
+              </Card>
+            </aside>
+
+            {/* View Container */}
+            <div className="flex-1">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsContent value="contacts" className="mt-0 space-y-4 animate-in fade-in duration-500">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {contacts.filter(c => c.nextSchedule).length === 0 ? (
-                      <p className="col-span-full py-12 text-center text-slate-400 text-sm font-medium border border-dashed rounded-3xl">예정된 일정이 없습니다.</p>
+                    {filteredContacts.length === 0 ? (
+                      <Card className="col-span-full border-dashed p-12 flex flex-col items-center text-center space-y-4 rounded-3xl">
+                        <Users className="w-12 h-12 text-slate-200" />
+                        <div className="space-y-1">
+                          <p className="text-slate-500 font-bold">검색 결과가 없거나 등록된 거래처가 없습니다.</p>
+                          <p className="text-slate-300 text-xs font-medium">새로운 비즈니스 인연을 기록해 보세요.</p>
+                        </div>
+                        <Button variant="outline" size="sm" onClick={() => setIsContactModalOpen(true)} className="rounded-full">
+                          첫 거래처 등록
+                        </Button>
+                      </Card>
                     ) : (
-                      contacts.filter(c => c.nextSchedule)
-                        .sort((a, b) => new Date(a.nextSchedule!).getTime() - new Date(b.nextSchedule!).getTime())
-                        .map(c => (
-                          <Card key={c.id} className="rounded-3xl border-l-[6px] border-l-primary shadow-sm hover:shadow-md transition-shadow transition-transform">
-                            <CardContent className="p-5 flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-2xl bg-primary/5 flex flex-col items-center justify-center text-primary border border-primary/10 shrink-0">
-                                <span className="text-[8px] font-bold uppercase">D-Day</span>
-                                <span className="text-lg font-bold leading-none">{c.nextSchedule?.split('-')[2]}</span>
-                              </div>
-                              <div className="flex-1 overflow-hidden">
-                                <h4 className="font-bold text-slate-900 truncate">{c.name}님</h4>
-                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight truncate">{c.company}</p>
-                              </div>
-                              <Button size="icon" variant="ghost" className="rounded-full hover:bg-primary/10 hover:text-primary transition-colors" onClick={() => { setSelectedContactId(c.id); setIsMeetingModalOpen(true); }}>
-                                <Plus />
-                              </Button>
-                            </CardContent>
-                          </Card>
-                        ))
+                      filteredContacts.map(c => (
+                        <ContactCard
+                          key={c.id} contact={c}
+                          onAddLog={() => { setSelectedContactId(c.id); setIsMeetingModalOpen(true); }}
+                          onDelete={() => deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'contacts', c.id))}
+                        />
+                      ))
                     )}
                   </div>
-                </div>
-              </TabsContent>
+                </TabsContent>
 
-              <TabsContent value="meetings" className="mt-0 space-y-4 animate-in fade-in duration-500">
-                {meetings.length === 0 ? (
-                  <div className="py-20 text-center border border-dashed rounded-3xl">
-                    <p className="text-slate-400 text-sm font-bold">생성된 AI 리포트가 없습니다.</p>
-                  </div>
-                ) : (
-                  meetings.map(m => (
-                    <MeetingCard key={m.id} meeting={m} onDelete={() => deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meetings', m.id))} />
-                  ))
-                )}
-              </TabsContent>
-
-              <TabsContent value="settings" className="mt-0 animate-in fade-in duration-500">
-                <Card className="rounded-[40px] border-slate-100 shadow-xl overflow-hidden max-w-xl mx-auto py-12">
-                  <CardContent className="flex flex-col items-center space-y-10">
-                    <LogBLogo variant="vertical" />
-                    <div className="w-full space-y-3">
-                      <div className="bg-slate-50 p-4 rounded-2xl flex justify-between items-center">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Account</span>
-                        <span className="text-xs font-bold text-slate-900">{user?.email}</span>
-                      </div>
-                      <div className="bg-slate-50 p-4 rounded-2xl flex justify-between items-center">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Sync Status</span>
-                        <Badge variant="outline" className="text-[9px] font-bold border-emerald-200 text-emerald-600 bg-emerald-50">Active Protective</Badge>
-                      </div>
+                <TabsContent value="schedule" className="mt-0 space-y-8 animate-in fade-in duration-500">
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3 px-2">
+                      <CalendarCheck className="text-primary w-5 h-5" />
+                      <h3 className="text-lg font-bold tracking-tight">전략적 예정 일정</h3>
                     </div>
-                    <Button
-                      variant="destructive"
-                      size="lg"
-                      className="w-full rounded-2xl font-bold transition-all shadow-lg shadow-destructive/10"
-                      onClick={() => signOut(auth)}
-                    >
-                      안전하게 세션 종료
-                    </Button>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {contacts.filter(c => c.nextSchedule).length === 0 ? (
+                        <p className="col-span-full py-12 text-center text-slate-400 text-sm font-medium border border-dashed rounded-3xl">예정된 일정이 없습니다.</p>
+                      ) : (
+                        contacts.filter(c => c.nextSchedule)
+                          .sort((a, b) => new Date(a.nextSchedule!).getTime() - new Date(b.nextSchedule!).getTime())
+                          .map(c => (
+                            <Card key={c.id} className="rounded-3xl border-l-[6px] border-l-primary shadow-sm hover:shadow-md transition-shadow transition-transform">
+                              <CardContent className="p-5 flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-2xl bg-primary/5 flex flex-col items-center justify-center text-primary border border-primary/10 shrink-0">
+                                  <span className="text-[8px] font-bold uppercase">D-Day</span>
+                                  <span className="text-lg font-bold leading-none">{c.nextSchedule?.split('-')[2]}</span>
+                                </div>
+                                <div className="flex-1 overflow-hidden">
+                                  <h4 className="font-bold text-slate-900 truncate">{c.name}님</h4>
+                                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight truncate">{c.company}</p>
+                                </div>
+                                <Button size="icon" variant="ghost" className="rounded-full hover:bg-primary/10 hover:text-primary transition-colors" onClick={() => { setSelectedContactId(c.id); setIsMeetingModalOpen(true); }}>
+                                  <Plus />
+                                </Button>
+                              </CardContent>
+                            </Card>
+                          ))
+                      )}
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="meetings" className="mt-0 space-y-4 animate-in fade-in duration-500">
+                  {meetings.length === 0 ? (
+                    <div className="py-20 text-center border border-dashed rounded-3xl">
+                      <p className="text-slate-400 text-sm font-bold">생성된 AI 리포트가 없습니다.</p>
+                    </div>
+                  ) : (
+                    meetings.map(m => (
+                      <MeetingCard key={m.id} meeting={m} onDelete={() => deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meetings', m.id))} />
+                    ))
+                  )}
+                </TabsContent>
+
+                <TabsContent value="settings" className="mt-0 animate-in fade-in duration-500">
+                  <Card className="rounded-[40px] border-slate-100 shadow-xl overflow-hidden max-w-xl mx-auto py-12">
+                    <CardContent className="flex flex-col items-center space-y-10">
+                      <LogBLogo variant="vertical" />
+                      <div className="w-full space-y-3">
+                        <div className="bg-slate-50 p-4 rounded-2xl flex justify-between items-center">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Account</span>
+                          <span className="text-xs font-bold text-slate-900">{user?.email}</span>
+                        </div>
+                        <div className="bg-slate-50 p-4 rounded-2xl flex justify-between items-center">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Sync Status</span>
+                          <Badge variant="outline" className="text-[9px] font-bold border-emerald-200 text-emerald-600 bg-emerald-50">Active Protective</Badge>
+                        </div>
+                      </div>
+                      <Button
+                        variant="destructive"
+                        size="lg"
+                        className="w-full rounded-2xl font-bold transition-all shadow-lg shadow-destructive/10"
+                        onClick={() => signOut(auth)}
+                      >
+                        안전하게 세션 종료
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            </div>
           </div>
         </div>
-      </main >
+      </main>
 
       {/* Floating Mobile Nav */}
-      < nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-full shadow-2xl p-2 flex justify-between items-center z-50" >
-        {
-          [
-            { id: 'contacts', icon: Users },
-            { id: 'schedule', icon: CalendarCheck },
-            { id: 'meetings', icon: MessageSquare },
-            { id: 'settings', icon: Settings },
-          ].map(item => (
-            <Button
-              key={item.id}
-              variant="ghost"
-              size="icon"
-              onClick={() => setActiveTab(item.id)}
-              className={cn(
-                "rounded-full w-12 h-12 transition-all",
-                activeTab === item.id ? "bg-white text-slate-900 scale-110 shadow-lg" : "text-white/40"
-              )}
-            >
-              <item.icon className="w-5 h-5" />
-            </Button>
-          ))
-        }
-      </nav >
+      <nav className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[95%] max-w-sm bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-[32px] shadow-2xl p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] flex justify-between items-center z-50">
+        {[
+          { id: 'contacts', icon: Users },
+          { id: 'schedule', icon: CalendarCheck },
+          { id: 'meetings', icon: MessageSquare },
+          { id: 'settings', icon: Settings },
+        ].map(item => (
+          <Button
+            key={item.id}
+            variant="ghost"
+            size="icon"
+            onClick={() => setActiveTab(item.id)}
+            className={cn(
+              "rounded-full w-12 h-12 transition-all",
+              activeTab === item.id ? "bg-white text-slate-900 scale-110 shadow-lg" : "text-white/40"
+            )}
+          >
+            <item.icon className="w-5 h-5" />
+          </Button>
+        ))}
+      </nav>
 
       {/* Modals */}
       < Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen} >

@@ -385,11 +385,11 @@ export default function App() {
             className="rounded-full px-12 h-14 text-base font-bold shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
             onClick={() => setIsAuthModalOpen(true)}
           >
-            시작하기 <ChevronRight className="ml-2 w-5 h-5" />
+            시작하기
           </Button>
 
           <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest pt-8">
-            LOG BUSINESS SYSTEM v2.0
+            NEXTIDEALAB PROJECT#2
           </p>
         </motion.div>
 

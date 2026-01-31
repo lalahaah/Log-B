@@ -495,16 +495,16 @@ export default function App() {
 
           <div className="flex items-center gap-1.5 sm:gap-2">
             <Button
-              size="sm" className="rounded-full shadow-sm"
+              size="sm" className="rounded-full shadow-sm px-3"
               onClick={() => setIsContactModalOpen(true)}
             >
-              <Plus className="w-3.5 h-3.5 mr-1" strokeWidth={3} /> <span className="hidden sm:inline">거래처</span>
+              <Plus className="w-3.5 h-3.5 mr-1" strokeWidth={3} /> <span className="inline">거래처</span>
             </Button>
             <Button
-              size="sm" variant="secondary" className="rounded-full shadow-sm bg-slate-800 text-white hover:bg-slate-900"
+              size="sm" variant="secondary" className="rounded-full shadow-sm bg-slate-800 text-white hover:bg-slate-900 px-3"
               onClick={() => { setSelectedContactId(null); setMeetingContent(""); setIsMeetingModalOpen(true); }}
             >
-              <Plus className="w-3.5 h-3.5 mr-1" strokeWidth={3} /> <span className="hidden sm:inline">로그</span>
+              <Plus className="w-3.5 h-3.5 mr-1" strokeWidth={3} /> <span className="inline">로그</span>
             </Button>
 
             <DropdownMenu>
@@ -716,25 +716,24 @@ export default function App() {
       </main>
 
       {/* Floating Mobile Nav */}
-      <nav className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[95%] max-w-sm bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-[32px] shadow-2xl p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] flex justify-between items-center z-50">
+      <nav className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[95%] max-w-sm bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-[32px] shadow-2xl p-2 px-4 pb-[calc(0.5rem+env(safe-area-inset-bottom))] flex justify-between items-center z-50">
         {[
-          { id: 'contacts', icon: Users },
-          { id: 'schedule', icon: CalendarCheck },
-          { id: 'meetings', icon: MessageSquare },
-          { id: 'settings', icon: Settings },
+          { id: 'contacts', icon: Users, label: '인맥' },
+          { id: 'schedule', icon: CalendarCheck, label: '일정' },
+          { id: 'meetings', icon: MessageSquare, label: '리포트' },
+          { id: 'settings', icon: Settings, label: '설정' },
         ].map(item => (
-          <Button
+          <button
             key={item.id}
-            variant="ghost"
-            size="icon"
             onClick={() => setActiveTab(item.id)}
             className={cn(
-              "rounded-full w-12 h-12 transition-all",
-              activeTab === item.id ? "bg-white text-slate-900 scale-110 shadow-lg" : "text-white/40"
+              "flex flex-col items-center justify-center gap-1 transition-all py-1.5 px-3 rounded-2xl",
+              activeTab === item.id ? "bg-white text-slate-900 scale-105 shadow-lg" : "text-white/40"
             )}
           >
-            <item.icon className="w-5 h-5" />
-          </Button>
+            <item.icon className={cn("w-5 h-5", activeTab === item.id ? "stroke-[2.5px]" : "stroke-[2px]")} />
+            <span className="text-[10px] font-bold tracking-tight">{item.label}</span>
+          </button>
         ))}
       </nav>
 

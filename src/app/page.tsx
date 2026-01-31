@@ -346,6 +346,11 @@ export default function App() {
     document.body.removeChild(link);
   };
 
+  const handleClearSchedule = async (contactId: string) => {
+    if (!user) return;
+    await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'contacts', contactId), { nextSchedule: '' });
+  };
+
   const filteredContacts = contacts.filter(c =>
     c.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     c.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -577,8 +582,8 @@ export default function App() {
                   <div className="flex flex-wrap gap-1.5 pt-2">
                     {['#중요', '#VIP', '#Potential'].map(tag => (
                       <Badge
-                        key={tag} variant="secondary"
-                        className="rounded-lg px-2 py-0.5 text-[9px] font-bold cursor-pointer hover:bg-primary/10 transition-colors"
+                        key={tag} variant="outline"
+                        className="rounded-lg px-2 py-0.5 text-[9px] font-bold cursor-pointer hover:bg-primary/5 hover:text-primary transition-colors border-slate-200"
                         onClick={() => setSearchQuery(tag.replace('#', ''))}
                       >
                         {tag}
@@ -661,9 +666,14 @@ export default function App() {
                                   <h4 className="font-bold text-slate-900 truncate">{c.name}님</h4>
                                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight truncate">{c.company}</p>
                                 </div>
-                                <Button size="icon" variant="ghost" className="rounded-full hover:bg-primary/10 hover:text-primary transition-colors" onClick={() => { setSelectedContactId(c.id); setIsMeetingModalOpen(true); }}>
-                                  <Plus />
-                                </Button>
+                                <div className="flex items-center gap-1">
+                                  <Button size="icon" variant="ghost" className="rounded-full w-8 h-8 text-slate-300 hover:text-destructive hover:bg-destructive/10 transition-colors" onClick={() => handleClearSchedule(c.id)}>
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                  <Button size="icon" variant="ghost" className="rounded-full w-8 h-8 hover:bg-primary/10 hover:text-primary transition-colors" onClick={() => { setSelectedContactId(c.id); setIsMeetingModalOpen(true); }}>
+                                    <Plus className="w-4 h-4" />
+                                  </Button>
+                                </div>
                               </CardContent>
                             </Card>
                           ))

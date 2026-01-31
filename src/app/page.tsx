@@ -350,7 +350,7 @@ export default function App() {
       const supported = 'contacts' in navigator && 'select' in (navigator as any).contacts;
 
       if (!supported) {
-        alert("이 브라우저는 연락처 가져오기 기능을 지원하지 않습니다. (안드로이드/iOS 크롬 등 모바일 브라우저 권장)");
+        alert("현재 사용 중인 브라우저/OS에서 연락처 가져오기 기능을 지원하지 않습니다.\n\n지원 환경:\n· 안드로이드 (Chrome, Edge 등)\n· iOS (현재 브라우저 기술 제약으로 미지원)\n· HTTPS 보안 연결 환경\n\n거래처 정보를 직접 입력해 주세요.");
         return;
       }
 
@@ -415,112 +415,114 @@ export default function App() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex flex-col bg-slate-50 relative overflow-hidden">
-        <div className="flex-1 flex flex-col items-center justify-center p-6">
-          {/* Subtle decorative elements */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-primary opacity-20" />
+      <div className="h-full overflow-y-auto app-scroll-area bg-slate-50 relative overflow-x-hidden">
+        <div className="min-h-[100dvh] flex flex-col">
+          <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 relative">
+            {/* Subtle decorative elements */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-primary opacity-20" />
 
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center z-10 space-y-8"
-          >
-            <LogBLogo variant="vertical" />
-
-            <div className="space-y-4 text-center max-w-sm">
-              <p className="text-sm font-medium text-slate-500 leading-relaxed">
-                성공하는 비즈니스의 시작, <br />
-                완벽한 기록과 AI 통찰로 성장을 관리하세요.
-              </p>
-            </div>
-
-            <Button
-              size="lg"
-              className="rounded-full px-12 h-14 text-base font-bold shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
-              onClick={() => setIsAuthModalOpen(true)}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col items-center z-10 space-y-8 w-full max-w-sm"
             >
-              시작하기
-            </Button>
+              <LogBLogo variant="vertical" />
 
-            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest pt-8">
-              NEXTIDEALAB PROJECT#2
-            </p>
-          </motion.div>
+              <div className="space-y-4 text-center max-w-sm">
+                <p className="text-sm font-medium text-slate-500 leading-relaxed font-pretendard">
+                  성공하는 비즈니스의 시작, <br />
+                  완벽한 기록과 AI 통찰로 성장을 관리하세요.
+                </p>
+              </div>
 
-          {/* Auth Dialog */}
-          <Dialog open={isAuthModalOpen} onOpenChange={setIsAuthModalOpen}>
-            <DialogContent className="sm:max-w-md rounded-[32px] p-8">
-              <DialogHeader className="space-y-3 mb-6">
-                <LogBLogo variant="symbol" className="w-10 h-10 mb-2" />
-                <DialogTitle className="text-2xl font-bold tracking-tight">
-                  {authMode === 'login' ? '환영합니다' : '계정 생성'}
-                </DialogTitle>
-                <DialogDescription className="text-slate-500 font-medium">
-                  {authMode === 'login' ? '본인 확인 후 서비스를 계속하세요' : '로그비와 함께 스마트한 비즈니스를 시작하세요'}
-                </DialogDescription>
-              </DialogHeader>
+              <Button
+                size="lg"
+                className="rounded-full px-12 h-14 text-base font-bold shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
+                onClick={() => setIsAuthModalOpen(true)}
+              >
+                시작하기
+              </Button>
 
-              <div className="space-y-6">
-                <Button
-                  variant="outline"
-                  className="w-full h-12 rounded-xl font-bold gap-3 border-slate-200"
-                  onClick={handleGoogleLogin}
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                  </svg>
-                  Google로 계속하기
-                </Button>
+              <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest pt-8">
+                NEXTIDEALAB PROJECT#2
+              </p>
+            </motion.div>
 
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100" /></div>
-                  <div className="relative flex justify-center text-[10px] uppercase font-bold text-slate-300 bg-white px-2">OR</div>
-                </div>
+            {/* Auth Dialog */}
+            <Dialog open={isAuthModalOpen} onOpenChange={setIsAuthModalOpen}>
+              <DialogContent className="sm:max-w-md rounded-[32px] p-8">
+                <DialogHeader className="space-y-3 mb-6">
+                  <LogBLogo variant="symbol" className="w-10 h-10 mb-2" />
+                  <DialogTitle className="text-2xl font-bold tracking-tight">
+                    {authMode === 'login' ? '환영합니다' : '계정 생성'}
+                  </DialogTitle>
+                  <DialogDescription className="text-slate-500 font-medium">
+                    {authMode === 'login' ? '본인 확인 후 서비스를 계속하세요' : '로그비와 함께 스마트한 비즈니스를 시작하세요'}
+                  </DialogDescription>
+                </DialogHeader>
 
-                <form onSubmit={handleEmailAuth} className="space-y-3">
-                  {authMode === 'signup' && (
+                <div className="space-y-6">
+                  <Button
+                    variant="outline"
+                    className="w-full h-12 rounded-xl font-bold gap-3 border-slate-200"
+                    onClick={handleGoogleLogin}
+                  >
+                    <svg className="w-5 h-5" viewBox="0 0 24 24">
+                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                    </svg>
+                    Google로 계속하기
+                  </Button>
+
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100" /></div>
+                    <div className="relative flex justify-center text-[10px] uppercase font-bold text-slate-300 bg-white px-2">OR</div>
+                  </div>
+
+                  <form onSubmit={handleEmailAuth} className="space-y-3">
+                    {authMode === 'signup' && (
+                      <Input
+                        required placeholder="이름" value={name} onChange={e => setName(e.target.value)}
+                        className="h-12 rounded-xl bg-slate-50 border-none font-bold"
+                      />
+                    )}
                     <Input
-                      required placeholder="이름" value={name} onChange={e => setName(e.target.value)}
+                      required type="email" placeholder="이메일" value={email} onChange={e => setEmail(e.target.value)}
                       className="h-12 rounded-xl bg-slate-50 border-none font-bold"
                     />
-                  )}
-                  <Input
-                    required type="email" placeholder="이메일" value={email} onChange={e => setEmail(e.target.value)}
-                    className="h-12 rounded-xl bg-slate-50 border-none font-bold"
-                  />
-                  <Input
-                    required type="password" placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)}
-                    className="h-12 rounded-xl bg-slate-50 border-none font-bold"
-                  />
-                  {authError && <p className="text-[10px] font-bold text-destructive text-center">{authError}</p>}
-                  <Button type="submit" className="w-full h-12 rounded-xl font-bold shadow-lg shadow-primary/10 transition-all active:scale-95">
-                    {authMode === 'login' ? '로그인' : '가입하기'}
-                  </Button>
-                </form>
+                    <Input
+                      required type="password" placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)}
+                      className="h-12 rounded-xl bg-slate-50 border-none font-bold"
+                    />
+                    {authError && <p className="text-[10px] font-bold text-destructive text-center">{authError}</p>}
+                    <Button type="submit" className="w-full h-12 rounded-xl font-bold shadow-lg shadow-primary/10 transition-all active:scale-95">
+                      {authMode === 'login' ? '로그인' : '가입하기'}
+                    </Button>
+                  </form>
 
-                <div className="text-center pt-2">
-                  <Button
-                    variant="ghost" size="sm"
-                    className="text-slate-400 font-bold text-[11px] hover:text-primary"
-                    onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
-                  >
-                    {authMode === 'login' ? '새 계정이 필요하신가요?' : '이미 계정이 있으신가요?'}
-                  </Button>
+                  <div className="text-center pt-2">
+                    <Button
+                      variant="ghost" size="sm"
+                      className="text-slate-400 font-bold text-[11px] hover:text-primary"
+                      onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
+                    >
+                      {authMode === 'login' ? '새 계정이 필요하신가요?' : '이미 계정이 있으신가요?'}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <Footer onOpenTerms={() => setIsTermsOpen(true)} onOpenPrivacy={() => setIsPrivacyOpen(true)} />
         </div>
-        <Footer onOpenTerms={() => setIsTermsOpen(true)} onOpenPrivacy={() => setIsPrivacyOpen(true)} />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[#FDFDFD] font-pretendard selection:bg-primary/10 no-select">
+    <div className="flex flex-col h-full bg-[#FDFDFD] font-pretendard selection:bg-primary/10 no-select">
       {/* Navbar */}
       <header className="fixed top-0 z-40 w-full bg-white/70 backdrop-blur-xl border-b border-slate-100 safe-top">
         <div className="max-w-screen-xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
@@ -549,57 +551,34 @@ export default function App() {
             ))}
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <Button
-              size="sm" className="rounded-full shadow-sm px-3"
-              onClick={() => {
-                setNewContactData({ name: '', phone: '', email: '' });
-                setIsContactModalOpen(true);
-              }}
-            >
-              <Plus className="w-3.5 h-3.5 mr-1" strokeWidth={3} /> <span className="inline">거래처</span>
-            </Button>
-            <Button
-              size="sm" variant="outline" className="rounded-full shadow-sm px-3 border-slate-200"
-              onClick={() => { setSelectedContactId(null); setIsScheduleModalOpen(true); }}
-            >
-              <Plus className="w-3.5 h-3.5 mr-1" strokeWidth={3} /> <span className="inline">일정</span>
-            </Button>
-            <Button
-              size="sm" variant="secondary" className="rounded-full shadow-sm bg-slate-800 text-white hover:bg-slate-900 px-3"
-              onClick={() => { setSelectedContactId(null); setMeetingContent(""); setIsMeetingModalOpen(true); }}
-            >
-              <Plus className="w-3.5 h-3.5 mr-1" strokeWidth={3} /> <span className="inline">로그</span>
-            </Button>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <Avatar className="w-8 h-8">
-                    <AvatarImage src={user?.photoURL} />
-                    <AvatarFallback className="bg-primary/5 text-primary text-[10px] font-bold">{user?.displayName?.[0] || 'U'}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="rounded-xl w-48 shadow-xl border-slate-100">
-                <DropdownMenuItem className="text-xs font-bold py-3 text-slate-500 cursor-default">
-                  {user?.email}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => setActiveTab('settings')}
-                  className="font-bold text-xs py-3 cursor-pointer"
-                >
-                  <Settings className="w-4 h-4 mr-2" /> 설정
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => signOut(auth)}
-                  className="font-bold text-xs py-3 cursor-pointer text-destructive focus:text-destructive"
-                >
-                  <LogOut className="w-4 h-4 mr-2" /> 로그아웃
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src={user?.photoURL} />
+                  <AvatarFallback className="bg-primary/5 text-primary text-[10px] font-bold">{user?.displayName?.[0] || 'U'}</AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="rounded-xl w-48 shadow-xl border-slate-100">
+              <DropdownMenuItem className="text-xs font-bold py-3 text-slate-500 cursor-default">
+                {user?.email}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setActiveTab('settings')}
+                className="font-bold text-xs py-3 cursor-pointer"
+              >
+                <Settings className="w-4 h-4 mr-2" /> 설정
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => signOut(auth)}
+                className="font-bold text-xs py-3 cursor-pointer text-destructive focus:text-destructive"
+              >
+                <LogOut className="w-4 h-4 mr-2" /> 로그아웃
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
@@ -612,14 +591,54 @@ export default function App() {
             <StatCard
               label="총 파트너" value={contacts.length} icon={<Users />}
               active={activeTab === 'contacts'} onClick={() => setActiveTab('contacts')}
+              action={
+                <Button
+                  size="xs"
+                  className="rounded-full h-8 px-3 font-bold shadow-sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setNewContactData({ name: '', phone: '', email: '' });
+                    setIsContactModalOpen(true);
+                  }}
+                >
+                  <Plus className="w-3 h-3 mr-1" strokeWidth={3} /> 거래처 추가
+                </Button>
+              }
             />
             <StatCard
               label="남은 일정" value={contacts.filter(c => c.nextSchedule).length} icon={<CalendarCheck />}
               active={activeTab === 'schedule'} onClick={() => setActiveTab('schedule')}
+              action={
+                <Button
+                  size="xs" variant="outline"
+                  className="rounded-full h-8 px-3 font-bold border-slate-200 shadow-sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedContactId(null);
+                    setIsScheduleModalOpen(true);
+                  }}
+                >
+                  <Plus className="w-3 h-3 mr-1" strokeWidth={3} /> 일정 등록
+                </Button>
+              }
             />
             <StatCard
               label="기록된 로그" value={meetings.length} icon={<MessageSquare />}
               active={activeTab === 'meetings'} onClick={() => setActiveTab('meetings')}
+              action={
+                <Button
+                  size="xs" variant="secondary"
+                  className="rounded-full h-8 px-3 font-bold bg-slate-800 text-white hover:bg-slate-900 shadow-sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedContactId(null);
+                    setMeetingContent("");
+                    setIsMeetingModalOpen(true);
+                  }}
+                >
+                  <Plus className="w-3 h-3 mr-1" strokeWidth={3} /> 로그 기록
+                </Button>
+              }
             />
           </section>
 
@@ -813,24 +832,26 @@ export default function App() {
 
       {/* Floating Mobile Nav */}
       <nav className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[95%] max-w-sm bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-[32px] shadow-2xl p-2 px-4 pb-[calc(0.5rem+env(safe-area-inset-bottom))] flex justify-between items-center z-50">
-        {[
-          { id: 'contacts', icon: Users, label: '인맥' },
-          { id: 'schedule', icon: CalendarCheck, label: '일정' },
-          { id: 'meetings', icon: MessageSquare, label: '리포트' },
-          { id: 'settings', icon: Settings, label: '설정' },
-        ].map(item => (
-          <button
-            key={item.id}
-            onClick={() => setActiveTab(item.id)}
-            className={cn(
-              "flex flex-col items-center justify-center gap-1 transition-all py-1.5 px-3 rounded-2xl",
-              activeTab === item.id ? "bg-white text-slate-900 scale-105 shadow-lg" : "text-white/40"
-            )}
-          >
-            <item.icon className={cn("w-5 h-5", activeTab === item.id ? "stroke-[2.5px]" : "stroke-[2px]")} />
-            <span className="text-[10px] font-bold tracking-tight">{item.label}</span>
-          </button>
-        ))}
+        {
+          [
+            { id: 'contacts', icon: Users, label: '인맥' },
+            { id: 'schedule', icon: CalendarCheck, label: '일정' },
+            { id: 'meetings', icon: MessageSquare, label: '리포트' },
+            { id: 'settings', icon: Settings, label: '설정' },
+          ].map(item => (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={cn(
+                "flex flex-col items-center justify-center gap-1 transition-all py-1.5 px-3 rounded-2xl",
+                activeTab === item.id ? "bg-white text-slate-900 scale-105 shadow-lg" : "text-white/40"
+              )}
+            >
+              <item.icon className={cn("w-5 h-5", activeTab === item.id ? "stroke-[2.5px]" : "stroke-[2px]")} />
+              <span className="text-[10px] font-bold tracking-tight">{item.label}</span>
+            </button>
+          ))
+        }
       </nav>
 
       {/* Desktop Dashboard Footer */}
@@ -846,7 +867,7 @@ export default function App() {
       />
 
       {/* Modals */}
-      < Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen} >
+      <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
         <DialogContent className="sm:max-w-xl rounded-[32px] p-8 max-h-[90vh] overflow-y-auto">
           <DialogHeader className="mb-6">
             <div className="flex justify-between items-center">
@@ -893,7 +914,7 @@ export default function App() {
             </div>
           </form>
         </DialogContent>
-      </Dialog >
+      </Dialog>
 
       <Dialog open={isMeetingModalOpen} onOpenChange={setIsMeetingModalOpen}>
         <DialogContent className="sm:max-w-2xl rounded-[32px] p-8 max-h-[90vh] overflow-y-auto">
@@ -989,160 +1010,173 @@ export default function App() {
           </form>
         </DialogContent>
       </Dialog>
-    </div >
+    </div>
   );
 }
 
 // --- Internal Components ---
 
-const StatCard = ({ label, value, icon, active, onClick }: { label: string, value: number, icon: React.ReactNode, active: boolean, onClick: () => void }) => (
-  <Card
-    onClick={onClick}
-    className={cn(
-      "cursor-pointer rounded-3xl transition-all duration-300 border-slate-100",
-      active ? "shadow-lg scale-102 ring-2 ring-primary/20 border-primary/20" : "shadow-sm hover:shadow-md hover:bg-slate-50/50"
-    )}
-  >
-    <CardContent className="p-6 flex items-center justify-between">
-      <div className="space-y-1">
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{label}</p>
-        <h4 className="text-3xl font-bold tracking-tight text-slate-900">{value}</h4>
-      </div>
-      <div className={cn(
-        "p-3 rounded-2xl transition-all shadow-sm shrink-0",
-        active ? "bg-primary text-white" : "bg-slate-50 text-slate-300"
-      )}>
-        {React.cloneElement(icon as React.ReactElement<any>, { size: 24, strokeWidth: 2.5 })}
-      </div>
-    </CardContent>
-  </Card>
-);
-
-const ContactCard = ({ contact, onAddLog, onDelete }: { contact: Contact, onAddLog: () => void, onDelete: () => void }) => (
-  <Card className="rounded-3xl border-slate-100 shadow-sm hover:shadow-md transition-shadow group overflow-hidden">
-    <CardContent className="p-5 space-y-5">
-      <div className="flex justify-between items-start">
-        <div className="flex items-center gap-3">
-          <Avatar className="w-11 h-11 border border-slate-100 shadow-sm">
-            <AvatarFallback className="bg-primary/5 text-primary text-sm font-bold">{contact.name?.[0]}</AvatarFallback>
-          </Avatar>
-          <div className="overflow-hidden">
-            <h4 className="font-bold text-slate-900 leading-tight truncate">{contact.name}님</h4>
-            <p className="text-[10px] text-slate-400 font-bold uppercase truncate">{contact.company} · {contact.position || "파트너"}</p>
+function StatCard({ label, value, icon, active, onClick, action }: { label: string, value: number, icon: React.ReactNode, active: boolean, onClick: () => void, action?: React.ReactNode }) {
+  return (
+    <Card
+      onClick={onClick}
+      className={cn(
+        "cursor-pointer rounded-3xl transition-all duration-300 border-slate-100 group",
+        active ? "shadow-lg scale-102 ring-2 ring-primary/20 border-primary/20 bg-white" : "shadow-sm hover:shadow-md hover:bg-slate-50/50 bg-white"
+      )}
+    >
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{label}</p>
+            <h4 className="text-3xl font-bold tracking-tight text-slate-900">{value}</h4>
+          </div>
+          <div className={cn(
+            "p-3 rounded-2xl transition-all shadow-sm shrink-0",
+            active ? "bg-primary text-white" : "bg-slate-50 text-slate-300"
+          )}>
+            {React.cloneElement(icon as React.ReactElement<any>, { size: 24, strokeWidth: 2.5 })}
           </div>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-slate-300 hover:text-slate-600">
-              <MoreVertical size={16} />
+        {action && (
+          <div className="pt-2">
+            {action}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function ContactCard({ contact, onAddLog, onDelete }: { contact: Contact, onAddLog: () => void, onDelete: () => void }) {
+  return (
+    <Card className="rounded-3xl border-slate-100 shadow-sm hover:shadow-md transition-shadow group overflow-hidden">
+      <CardContent className="p-5 space-y-5">
+        <div className="flex justify-between items-start">
+          <div className="flex items-center gap-3">
+            <Avatar className="w-11 h-11 border border-slate-100 shadow-sm">
+              <AvatarFallback className="bg-primary/5 text-primary text-sm font-bold">{contact.name?.[0]}</AvatarFallback>
+            </Avatar>
+            <div className="overflow-hidden">
+              <h4 className="font-bold text-slate-900 leading-tight truncate">{contact.name}님</h4>
+              <p className="text-[10px] text-slate-400 font-bold uppercase truncate">{contact.company} · {contact.position || "파트너"}</p>
+            </div>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-slate-300 hover:text-slate-600">
+                <MoreVertical size={16} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="rounded-xl border-slate-100">
+              <DropdownMenuItem onClick={onDelete} className="text-destructive font-bold text-xs cursor-pointer focus:text-destructive">
+                <Trash2 className="w-4 h-4 mr-2" /> 정보 삭제
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        <div className="flex flex-wrap gap-1">
+          {contact.tags?.map((tag, i) => (
+            <Badge key={i} variant="secondary" className="px-2 py-0.5 text-[8px] font-bold bg-slate-50 text-slate-400 border-none tracking-tight">#{tag}</Badge>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-2 pt-2 border-t border-slate-50">
+          <div className="flex items-center gap-2 text-slate-400">
+            <Clock size={12} />
+            <p className="text-[10px] font-bold tracking-tight">{contact.phone || "연락처 미등록"}</p>
+          </div>
+          <div className="flex items-center justify-between pt-1">
+            {contact.nextSchedule ? (
+              <Badge className="rounded-full px-3 py-1 bg-primary text-white text-[9px] font-bold border-none shadow-sm shadow-primary/10">
+                {contact.nextSchedule} 예정
+              </Badge>
+            ) : (
+              <p className="text-[9px] font-bold text-slate-300">로그 내역 없음</p>
+            )}
+            <Button variant="outline" size="xs" onClick={onAddLog} className="rounded-full text-[10px] font-bold border-slate-100 h-7 px-3">
+              <Plus className="w-3 h-3 mr-1" /> 로그 추가
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="rounded-xl border-slate-100">
-            <DropdownMenuItem onClick={onDelete} className="text-destructive font-bold text-xs cursor-pointer focus:text-destructive">
-              <Trash2 className="w-4 h-4 mr-2" /> 정보 삭제
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <div className="flex flex-wrap gap-1">
-        {contact.tags?.map((tag, i) => (
-          <Badge key={i} variant="secondary" className="px-2 py-0.5 text-[8px] font-bold bg-slate-50 text-slate-400 border-none tracking-tight">#{tag}</Badge>
-        ))}
-      </div>
-
-      <div className="flex flex-col gap-2 pt-2 border-t border-slate-50">
-        <div className="flex items-center gap-2 text-slate-400">
-          <Clock size={12} />
-          <p className="text-[10px] font-bold tracking-tight">{contact.phone || "연락처 미등록"}</p>
-        </div>
-        <div className="flex items-center justify-between pt-1">
-          {contact.nextSchedule ? (
-            <Badge className="rounded-full px-3 py-1 bg-primary text-white text-[9px] font-bold border-none shadow-sm shadow-primary/10">
-              {contact.nextSchedule} 예정
-            </Badge>
-          ) : (
-            <p className="text-[9px] font-bold text-slate-300">로그 내역 없음</p>
-          )}
-          <Button variant="outline" size="xs" onClick={onAddLog} className="rounded-full text-[10px] font-bold border-slate-100 h-7 px-3">
-            <Plus className="w-3 h-3 mr-1" /> 로그 추가
-          </Button>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-);
-
-const MeetingCard = ({ meeting, onDelete }: { meeting: Meeting, onDelete: () => void }) => (
-  <Card className="rounded-[40px] border-slate-100 shadow-sm overflow-hidden mb-8">
-    <CardHeader className="p-6 md:p-8 flex flex-row items-center justify-between space-y-0">
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg">
-          <MessageSquare size={20} />
-        </div>
-        <div>
-          <CardTitle className="text-xl font-bold tracking-tight">{meeting.contactName}님과의 미팅</CardTitle>
-          <div className="flex items-center gap-2 mt-1">
-            <Badge variant="outline" className="text-[9px] font-bold rounded-md bg-slate-50 border-none text-slate-400">{meeting.date}</Badge>
-            {meeting.location && <p className="text-[10px] text-slate-300 font-bold uppercase">{meeting.location}</p>}
           </div>
         </div>
-      </div>
-      <Button variant="ghost" size="icon" onClick={onDelete} className="text-slate-200 hover:text-destructive transition-colors rounded-full">
-        <X size={20} />
-      </Button>
-    </CardHeader>
+      </CardContent>
+    </Card>
+  );
+}
 
-    <CardContent className="px-6 md:px-8 pb-8 space-y-8">
-      {meeting.aiSummary && (
-        <div className="bg-primary/5 rounded-[32px] p-6 md:p-8 border border-primary/10 space-y-6">
-          <div className="flex items-center gap-2 text-primary">
-            <Sparkles size={16} />
-            <span className="text-[10px] font-black uppercase tracking-widest">AI 파트너 브리핑</span>
+function MeetingCard({ meeting, onDelete }: { meeting: Meeting, onDelete: () => void }) {
+  return (
+    <Card className="rounded-[40px] border-slate-100 shadow-sm overflow-hidden mb-8">
+      <CardHeader className="p-6 md:p-8 flex flex-row items-center justify-between space-y-0">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg">
+            <MessageSquare size={20} />
           </div>
-          <p className="text-slate-700 font-bold text-lg md:text-xl leading-relaxed italic">
-            "{meeting.aiSummary.peer_briefing}"
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white p-5 rounded-2xl shadow-sm space-y-2">
-              <h5 className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">현장 분위기</h5>
-              <p className="text-xs text-slate-600 font-medium leading-relaxed">{meeting.aiSummary.vibe_check}</p>
-            </div>
-            <div className="bg-white p-5 rounded-2xl shadow-sm space-y-2">
-              <h5 className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">실행 전략</h5>
-              <ul className="space-y-1.5">
-                {meeting.aiSummary.next_action_tips?.map((tip: string, i: number) => (
-                  <li key={i} className="text-[11px] text-primary font-bold flex items-start gap-2 leading-tight">
-                    <span className="mt-1.5 w-1 h-1 bg-primary/40 rounded-full shrink-0" /> {tip}
-                  </li>
-                ))}
-              </ul>
+          <div>
+            <CardTitle className="text-xl font-bold tracking-tight">{meeting.contactName}님과의 미팅</CardTitle>
+            <div className="flex items-center gap-2 mt-1">
+              <Badge variant="outline" className="text-[9px] font-bold rounded-md bg-slate-50 border-none text-slate-400">{meeting.date}</Badge>
+              {meeting.location && <p className="text-[10px] text-slate-300 font-bold uppercase">{meeting.location}</p>}
             </div>
           </div>
-          <p className="text-primary/60 text-[10px] font-bold italic text-center pt-2">
-            {meeting.aiSummary.cheering_message}
-          </p>
         </div>
-      )}
+        <Button variant="ghost" size="icon" onClick={onDelete} className="text-slate-200 hover:text-destructive transition-colors rounded-full">
+          <X size={20} />
+        </Button>
+      </CardHeader>
 
-      <div className="space-y-3">
-        <h5 className="text-[10px] font-bold text-slate-300 uppercase tracking-widest ml-1">나눈 대화 기록</h5>
-        <div className="bg-slate-50/70 p-6 rounded-3xl border border-slate-100 font-medium text-slate-600 text-sm leading-relaxed italic">
-          "{meeting.content}"
+      <CardContent className="px-6 md:px-8 pb-8 space-y-8">
+        {meeting.aiSummary && (
+          <div className="bg-primary/5 rounded-[32px] p-6 md:p-8 border border-primary/10 space-y-6">
+            <div className="flex items-center gap-2 text-primary">
+              <Sparkles size={16} />
+              <span className="text-[10px] font-black uppercase tracking-widest">AI 파트너 브리핑</span>
+            </div>
+            <p className="text-slate-700 font-bold text-lg md:text-xl leading-relaxed italic">
+              "{meeting.aiSummary.peer_briefing}"
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white p-5 rounded-2xl shadow-sm space-y-2">
+                <h5 className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">현장 분위기</h5>
+                <p className="text-xs text-slate-600 font-medium leading-relaxed">{meeting.aiSummary.vibe_check}</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl shadow-sm space-y-2">
+                <h5 className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">실행 전략</h5>
+                <ul className="space-y-1.5">
+                  {meeting.aiSummary.next_action_tips?.map((tip: string, i: number) => (
+                    <li key={i} className="text-[11px] text-primary font-bold flex items-start gap-2 leading-tight">
+                      <span className="mt-1.5 w-1 h-1 bg-primary/40 rounded-full shrink-0" /> {tip}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <p className="text-primary/60 text-[10px] font-bold italic text-center pt-2">
+              {meeting.aiSummary.cheering_message}
+            </p>
+          </div>
+        )}
+
+        <div className="space-y-3">
+          <h5 className="text-[10px] font-bold text-slate-300 uppercase tracking-widest ml-1">나눈 대화 기록</h5>
+          <div className="bg-slate-50/70 p-6 rounded-3xl border border-slate-100 font-medium text-slate-600 text-sm leading-relaxed italic">
+            "{meeting.content}"
+          </div>
         </div>
-      </div>
 
-      {meeting.nextSchedule && (
-        <div className="flex items-center gap-2 bg-slate-900 px-6 py-4 rounded-full text-white w-fit shadow-xl shadow-slate-900/10">
-          <Calendar className="w-4 h-4" />
-          <span className="text-xs font-bold font-mono tracking-tight">NEXT STEP: {meeting.nextSchedule}</span>
-        </div>
-      )}
-    </CardContent>
-  </Card>
-);
+        {meeting.nextSchedule && (
+          <div className="flex items-center gap-2 bg-slate-900 px-6 py-4 rounded-full text-white w-fit shadow-xl shadow-slate-900/10">
+            <Calendar className="w-4 h-4" />
+            <span className="text-xs font-bold font-mono tracking-tight">NEXT STEP: {meeting.nextSchedule}</span>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
 
-const CalendarView = ({ contacts }: { contacts: Contact[] }) => {
+function CalendarView({ contacts }: { contacts: Contact[] }) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const daysInMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -1213,11 +1247,11 @@ const CalendarView = ({ contacts }: { contacts: Contact[] }) => {
       </div>
     </Card>
   );
-};
+}
 
 // --- Footer & Legal Components ---
 
-const Footer = ({ onOpenTerms, onOpenPrivacy }: { onOpenTerms: () => void, onOpenPrivacy: () => void }) => {
+function Footer({ onOpenTerms, onOpenPrivacy }: { onOpenTerms: () => void, onOpenPrivacy: () => void }) {
   return (
     <footer className="w-full bg-white border-t border-slate-200 pt-16 pb-32 md:pb-16 mt-20">
       <div className="max-w-screen-xl mx-auto px-6 md:px-8">
@@ -1283,158 +1317,160 @@ const Footer = ({ onOpenTerms, onOpenPrivacy }: { onOpenTerms: () => void, onOpe
       </div>
     </footer>
   );
-};
+}
 
-const LegalModals = ({
+function LegalModals({
   isTermsOpen, setIsTermsOpen,
   isPrivacyOpen, setIsPrivacyOpen
 }: {
   isTermsOpen: boolean, setIsTermsOpen: (v: boolean) => void,
   isPrivacyOpen: boolean, setIsPrivacyOpen: (v: boolean) => void
-}) => (
-  <>
-    <Dialog open={isTermsOpen} onOpenChange={setIsTermsOpen}>
-      <DialogContent className="sm:max-w-2xl rounded-[32px] p-8 max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-black tracking-tight">서비스 이용약관</DialogTitle>
-        </DialogHeader>
-        <div className="mt-8 text-sm text-slate-600 font-medium leading-relaxed space-y-6">
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">제1조 (목적)</h3>
-            <p>본 약관은 Log:B(이하 "서비스")가 제공하는 제반 서비스의 이용과 관련하여 서비스와 회원 사이의 권리, 의무 및 책임 사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
-          </section>
+}) {
+  return (
+    <>
+      <Dialog open={isTermsOpen} onOpenChange={setIsTermsOpen}>
+        <DialogContent className="sm:max-w-2xl rounded-[32px] p-8 max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-black tracking-tight">서비스 이용약관</DialogTitle>
+          </DialogHeader>
+          <div className="mt-8 text-sm text-slate-600 font-medium leading-relaxed space-y-6">
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">제1조 (목적)</h3>
+              <p>본 약관은 Log:B(이하 "서비스")가 제공하는 제반 서비스의 이용과 관련하여 서비스와 회원 사이의 권리, 의무 및 책임 사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">제2조 (용어의 정의)</h3>
-            <ol className="list-decimal list-inside space-y-2">
-              <li>"서비스"라 함은 회원이 비즈니스 거래처 정보를 관리하고 미팅 내용을 기록/분석할 수 있도록 제공되는 'Log:B' 웹 서비스를 의미합니다.</li>
-              <li>"회원"이라 함은 본 약관에 동의하고 서비스를 이용하는 이용자를 말합니다.</li>
-            </ol>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">제2조 (용어의 정의)</h3>
+              <ol className="list-decimal list-inside space-y-2">
+                <li>"서비스"라 함은 회원이 비즈니스 거래처 정보를 관리하고 미팅 내용을 기록/분석할 수 있도록 제공되는 'Log:B' 웹 서비스를 의미합니다.</li>
+                <li>"회원"이라 함은 본 약관에 동의하고 서비스를 이용하는 이용자를 말합니다.</li>
+              </ol>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">제3조 (약관의 효력 및 변경)</h3>
-            <ol className="list-decimal list-inside space-y-2">
-              <li>본 약관은 서비스 내에 게시하거나 기타의 방법으로 회원에게 공지함으로써 효력이 발생합니다.</li>
-              <li>서비스는 필요하다고 인정되는 경우 관련 법령을 위배하지 않는 범위 내에서 약관을 변경할 수 있습니다.</li>
-            </ol>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">제3조 (약관의 효력 및 변경)</h3>
+              <ol className="list-decimal list-inside space-y-2">
+                <li>본 약관은 서비스 내에 게시하거나 기타의 방법으로 회원에게 공지함으로써 효력이 발생합니다.</li>
+                <li>서비스는 필요하다고 인정되는 경우 관련 법령을 위배하지 않는 범위 내에서 약관을 변경할 수 있습니다.</li>
+              </ol>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">제4조 (서비스의 내용 및 변경)</h3>
-            <ol className="list-decimal list-inside space-y-2">
-              <li>서비스는 다음과 같은 기능을 제공합니다.
-                <ul className="list-disc list-inside ml-6 mt-1 opacity-80">
-                  <li>거래처 정보 관리 및 일괄 등록(CSV)</li>
-                  <li>음성 및 텍스트 기반 미팅 리포트 작성</li>
-                  <li>AI 기반 미팅 요약 및 비즈니스 인사이트 도출</li>
-                  <li>일정 관리 및 대시보드 제공</li>
-                </ul>
-              </li>
-              <li>서비스는 기술적 사양의 변경이나 운영상 필요에 따라 서비스의 내용을 변경할 수 있습니다.</li>
-            </ol>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">제4조 (서비스의 내용 및 변경)</h3>
+              <ol className="list-decimal list-inside space-y-2">
+                <li>서비스는 다음과 같은 기능을 제공합니다.
+                  <ul className="list-disc list-inside ml-6 mt-1 opacity-80">
+                    <li>거래처 정보 관리 및 일괄 등록(CSV)</li>
+                    <li>음성 및 텍스트 기반 미팅 리포트 작성</li>
+                    <li>AI 기반 미팅 요약 및 비즈니스 인사이트 도출</li>
+                    <li>일정 관리 및 대시보드 제공</li>
+                  </ul>
+                </li>
+                <li>서비스는 기술적 사양의 변경이나 운영상 필요에 따라 서비스의 내용을 변경할 수 있습니다.</li>
+              </ol>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">제5조 (개인정보 보호)</h3>
-            <p>서비스는 회원의 개인정보를 보호하기 위해 노력하며, 개인정보의 보호 및 사용에 대해서는 관련 법령 및 "개인정보처리방침"에 따릅니다.</p>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">제5조 (개인정보 보호)</h3>
+              <p>서비스는 회원의 개인정보를 보호하기 위해 노력하며, 개인정보의 보호 및 사용에 대해서는 관련 법령 및 "개인정보처리방침"에 따릅니다.</p>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">제6조 (서비스 이용의 제한 및 중단)</h3>
-            <ol className="list-decimal list-inside space-y-2">
-              <li>회원이 서비스의 정상적인 운영을 방해하거나 타인의 권리를 침해하는 경우 서비스 이용을 제한할 수 있습니다.</li>
-              <li>시스템 점검, 교체 및 고장, 통신두절 등의 사유가 발생한 경우 서비스 제공을 일시적으로 중단할 수 있습니다.</li>
-            </ol>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">제6조 (서비스 이용의 제한 및 중단)</h3>
+              <ol className="list-decimal list-inside space-y-2">
+                <li>회원이 서비스의 정상적인 운영을 방해하거나 타인의 권리를 침해하는 경우 서비스 이용을 제한할 수 있습니다.</li>
+                <li>시스템 점검, 교체 및 고장, 통신두절 등의 사유가 발생한 경우 서비스 제공을 일시적으로 중단할 수 있습니다.</li>
+              </ol>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">제7조 (책임 제한 및 면책)</h3>
-            <ol className="list-decimal list-inside space-y-2">
-              <li>서비스는 천재지변, 전시, 기타 이에 준하는 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.</li>
-              <li>서비스는 AI 기능을 통해 제공되는 요약 및 분석 결과의 완전성, 정확성, 유용성에 대해 보증하지 않으며, 이를 신뢰하여 발생한 결과에 대해 책임을 지지 않습니다.</li>
-              <li>회원이 서비스에 저장한 데이터의 관리 책임은 회원 본인에게 있으며, 회원의 부주의로 인한 데이터 유출이나 삭제에 대해 서비스는 책임을 지지 않습니다.</li>
-            </ol>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">제7조 (책임 제한 및 면책)</h3>
+              <ol className="list-decimal list-inside space-y-2">
+                <li>서비스는 천재지변, 전시, 기타 이에 준하는 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.</li>
+                <li>서비스는 AI 기능을 통해 제공되는 요약 및 분석 결과의 완전성, 정확성, 유용성에 대해 보증하지 않으며, 이를 신뢰하여 발생한 결과에 대해 책임을 지지 않습니다.</li>
+                <li>회원이 서비스에 저장한 데이터의 관리 책임은 회원 본인에게 있으며, 회원의 부주의로 인한 데이터 유출이나 삭제에 대해 서비스는 책임을 지지 않습니다.</li>
+              </ol>
+            </section>
 
-          <footer className="pt-6 border-t border-slate-100 text-[11px] font-bold text-slate-400">
-            <p>공고일자: 2024년 5월 22일</p>
-            <p>시행일자: 2024년 5월 22일</p>
-          </footer>
-        </div>
-        <div className="mt-8 sticky bottom-0 pt-4 bg-white">
-          <Button onClick={() => setIsTermsOpen(false)} className="w-full h-14 rounded-2xl font-black text-base shadow-xl shadow-primary/10">약관 동의 및 확인</Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+            <footer className="pt-6 border-t border-slate-100 text-[11px] font-bold text-slate-400">
+              <p>공고일자: 2024년 5월 22일</p>
+              <p>시행일자: 2024년 5월 22일</p>
+            </footer>
+          </div>
+          <div className="mt-8 sticky bottom-0 pt-4 bg-white">
+            <Button onClick={() => setIsTermsOpen(false)} className="w-full h-14 rounded-2xl font-black text-base shadow-xl shadow-primary/10">약관 동의 및 확인</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-    <Dialog open={isPrivacyOpen} onOpenChange={setIsPrivacyOpen}>
-      <DialogContent className="sm:max-w-2xl rounded-[32px] p-8 max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-black tracking-tight">개인정보처리방침</DialogTitle>
-        </DialogHeader>
-        <div className="mt-8 text-sm text-slate-600 font-medium leading-relaxed space-y-6">
-          <p className="p-4 bg-slate-50 rounded-2xl border border-slate-100 italic">
-            Log:B(이하 "서비스")는 이용자의 개인정보를 소중히 다루며, 「개인정보 보호법」 등 관련 법령을 준수합니다. 본 방침을 통해 회원이 제공하는 개인정보가 어떤 용도와 방식으로 이용되고 있으며, 보호를 위해 어떤 조치가 취해지고 있는지 알려드립니다.
-          </p>
+      <Dialog open={isPrivacyOpen} onOpenChange={setIsPrivacyOpen}>
+        <DialogContent className="sm:max-w-2xl rounded-[32px] p-8 max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-black tracking-tight">개인정보처리방침</DialogTitle>
+          </DialogHeader>
+          <div className="mt-8 text-sm text-slate-600 font-medium leading-relaxed space-y-6">
+            <p className="p-4 bg-slate-50 rounded-2xl border border-slate-100 italic">
+              Log:B(이하 "서비스")는 이용자의 개인정보를 소중히 다루며, 「개인정보 보호법」 등 관련 법령을 준수합니다. 본 방침을 통해 회원이 제공하는 개인정보가 어떤 용도와 방식으로 이용되고 있으며, 보호를 위해 어떤 조치가 취해지고 있는지 알려드립니다.
+            </p>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">1. 수집하는 개인정보 항목 및 수집방법</h3>
-            <ul className="list-disc list-inside space-y-2">
-              <li><strong>수집 항목:</strong> (필수) 이메일 주소, 이름, 프로필 사진 (Google 로그인 연동 시)</li>
-              <li className="ml-6 opacity-80">(선택) 서비스 이용 기록, 접속 로그, 쿠키, 접속 IP 정보</li>
-              <li><strong>수집 방법:</strong> 홈페이지(구글 로그인), 서비스 이용 과정에서의 자동 생성</li>
-            </ul>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">1. 수집하는 개인정보 항목 및 수집방법</h3>
+              <ul className="list-disc list-inside space-y-2">
+                <li><strong>수집 항목:</strong> (필수) 이메일 주소, 이름, 프로필 사진 (Google 로그인 연동 시)</li>
+                <li className="ml-6 opacity-80">(선택) 서비스 이용 기록, 접속 로그, 쿠키, 접속 IP 정보</li>
+                <li><strong>수집 방법:</strong> 홈페이지(구글 로그인), 서비스 이용 과정에서의 자동 생성</li>
+              </ul>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">2. 개인정보의 수집 및 이용목적</h3>
-            <ol className="list-decimal list-inside space-y-2">
-              <li>회원 가입 의사 확인 및 본인 식별</li>
-              <li>비즈니스 로그 관리, AI 요약 리포트 제공 등 서비스 핵심 기능 제공</li>
-              <li>서비스 이용 통계 분석 및 품질 개선</li>
-              <li>불량 이용 방지 및 비인가 사용 방지</li>
-            </ol>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">2. 개인정보의 수집 및 이용목적</h3>
+              <ol className="list-decimal list-inside space-y-2">
+                <li>회원 가입 의사 확인 및 본인 식별</li>
+                <li>비즈니스 로그 관리, AI 요약 리포트 제공 등 서비스 핵심 기능 제공</li>
+                <li>서비스 이용 통계 분석 및 품질 개선</li>
+                <li>불량 이용 방지 및 비인가 사용 방지</li>
+              </ol>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">3. 개인정보의 보유 및 이용기간</h3>
-            <p>회원의 개인정보는 원칙적으로 회원 탈퇴 시까지 보유하며, 목적 달성 시 지체 없이 파기합니다. 단, 관계 법령에 따라 보존할 필요가 있는 경우 해당 기간 동안 보관합니다.</p>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">3. 개인정보의 보유 및 이용기간</h3>
+              <p>회원의 개인정보는 원칙적으로 회원 탈퇴 시까지 보유하며, 목적 달성 시 지체 없이 파기합니다. 단, 관계 법령에 따라 보존할 필요가 있는 경우 해당 기간 동안 보관합니다.</p>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">4. 데이터 저장 및 제3자 제공 (Firebase & Google)</h3>
-            <p>서비스는 안정적인 데이터 관리와 AI 기능 제공을 위해 다음과 같이 외부 인프라를 활용합니다.</p>
-            <ul className="list-disc list-inside space-y-2">
-              <li><strong>수탁업체: Google Cloud (Firebase)</strong><br /><span className="ml-6 text-xs text-slate-400">데이터 클라우드 저장, 사용자 인증 관리</span></li>
-              <li><strong>수탁업체: Google Gemini API</strong><br /><span className="ml-6 text-xs text-slate-400">미팅 기록의 텍스트 요약 및 비즈니스 조언 생성 (AI 학습 비재사용 설정)</span></li>
-            </ul>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">4. 데이터 저장 및 제3자 제공 (Firebase & Google)</h3>
+              <p>서비스는 안정적인 데이터 관리와 AI 기능 제공을 위해 다음과 같이 외부 인프라를 활용합니다.</p>
+              <ul className="list-disc list-inside space-y-2">
+                <li><strong>수탁업체: Google Cloud (Firebase)</strong><br /><span className="ml-6 text-xs text-slate-400">데이터 클라우드 저장, 사용자 인증 관리</span></li>
+                <li><strong>수탁업체: Google Gemini API</strong><br /><span className="ml-6 text-xs text-slate-400">미팅 기록의 텍스트 요약 및 비즈니스 조언 생성 (AI 학습 비재사용 설정)</span></li>
+              </ul>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">5. 이용자의 권리와 의무</h3>
-            <p>이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있으며, 회원 탈퇴를 통해 개인정보 이용에 대한 동의를 철회할 수 있습니다.</p>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">5. 이용자의 권리와 의무</h3>
+              <p>이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있으며, 회원 탈퇴를 통해 개인정보 이용에 대한 동의를 철회할 수 있습니다.</p>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">6. 개인정보의 파기절차 및 방법</h3>
-            <p>회원이 탈퇴하거나 개인정보 보유 기간이 경과된 경우, 전자적 파일 형태의 정보는 기록을 재생할 수 없는 기술적 방법을 사용하여 파기합니다.</p>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">6. 개인정보의 파기절차 및 방법</h3>
+              <p>회원이 탈퇴하거나 개인정보 보유 기간이 경과된 경우, 전자적 파일 형태의 정보는 기록을 재생할 수 없는 기술적 방법을 사용하여 파기합니다.</p>
+            </section>
 
-          <section className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900">7. 쿠키(Cookie)의 운용 및 거부</h3>
-            <p>서비스는 개인화된 서비스 제공을 위해 쿠키를 사용하며, 회원은 브라우저 설정을 통해 쿠키 저장을 거부할 수 있습니다. 단, 이 경우 서비스 이용에 일부 제한이 있을 수 있습니다.</p>
-          </section>
+            <section className="space-y-4">
+              <h3 className="text-base font-bold text-slate-900">7. 쿠키(Cookie)의 운용 및 거부</h3>
+              <p>서비스는 개인화된 서비스 제공을 위해 쿠키를 사용하며, 회원은 브라우저 설정을 통해 쿠키 저장을 거부할 수 있습니다. 단, 이 경우 서비스 이용에 일부 제한이 있을 수 있습니다.</p>
+            </section>
 
-          <footer className="pt-6 border-t border-slate-100 text-[11px] font-bold text-slate-400">
-            <p>이메일 문의: support@log-b.ai</p>
-            <p>버전번호: 1.0 | 최종 업데이트: 2024년 5월 22일</p>
-          </footer>
-        </div>
-        <div className="mt-8 sticky bottom-0 pt-4 bg-white">
-          <Button onClick={() => setIsPrivacyOpen(false)} className="w-full h-14 rounded-2xl font-black text-base shadow-xl shadow-primary/10">확인 및 닫기</Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  </>
-);
+            <footer className="pt-6 border-t border-slate-100 text-[11px] font-bold text-slate-400">
+              <p>이메일 문의: support@log-b.ai</p>
+              <p>버전번호: 1.0 | 최종 업데이트: 2024년 5월 22일</p>
+            </footer>
+          </div>
+          <div className="mt-8 sticky bottom-0 pt-4 bg-white">
+            <Button onClick={() => setIsPrivacyOpen(false)} className="w-full h-14 rounded-2xl font-black text-base shadow-xl shadow-primary/10">확인</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}

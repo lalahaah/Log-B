@@ -16,10 +16,14 @@ import {
   MicOff,
   Loader2,
   ChevronRight,
+  ChevronLeft,
   CalendarCheck,
   History,
   Sparkles,
   Mail,
+  ShieldCheck,
+  FileText,
+  ExternalLink,
   LogOut,
   Trash2,
   MoreVertical
@@ -179,7 +183,10 @@ export default function App() {
 
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isMeetingModalOpen, setIsMeetingModalOpen] = useState(false);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
+  const [newContactData, setNewContactData] = useState({ name: '', phone: '', email: '' });
+  const [scheduleView, setScheduleView] = useState<'card' | 'calendar'>('card');
 
   const [isListening, setIsListening] = useState(false);
   const [meetingContent, setMeetingContent] = useState("");
@@ -196,6 +203,9 @@ export default function App() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [authError, setAuthError] = useState("");
+
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   // 1. Authentication
   useEffect(() => {
@@ -320,6 +330,44 @@ export default function App() {
     setMeetingContent("");
   };
 
+  const handleSaveSchedule = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!user) return;
+    const fd = new FormData(e.currentTarget);
+    const contactId = fd.get('contactId') as string;
+    const date = fd.get('date') as string;
+
+    if (contactId && date) {
+      await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'contacts', contactId), { nextSchedule: date });
+      setIsScheduleModalOpen(false);
+    }
+  };
+
+  const handleImportContacts = async () => {
+    try {
+      const props = ['name', 'tel', 'email'];
+      const opts = { multiple: false };
+      const supported = 'contacts' in navigator && 'select' in (navigator as any).contacts;
+
+      if (!supported) {
+        alert("이 브라우저는 연락처 가져오기 기능을 지원하지 않습니다. (안드로이드/iOS 크롬 등 모바일 브라우저 권장)");
+        return;
+      }
+
+      const contacts_picked = await (navigator as any).contacts.select(props, opts);
+      if (contacts_picked.length > 0) {
+        const c = contacts_picked[0];
+        setNewContactData({
+          name: c.name?.[0] || '',
+          phone: c.tel?.[0] || '',
+          email: c.email?.[0] || ''
+        });
+      }
+    } catch (err) {
+      console.error("Contact Picker Error:", err);
+    }
+  };
+
   const toggleSTT = () => {
     const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
     if (!SpeechRecognition) return;
@@ -367,103 +415,106 @@ export default function App() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50/50 relative overflow-hidden">
-        {/* Subtle decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-primary opacity-20" />
+      <div className="min-h-screen flex flex-col bg-slate-50 relative overflow-hidden">
+        <div className="flex-1 flex flex-col items-center justify-center p-6">
+          {/* Subtle decorative elements */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-primary opacity-20" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center z-10 space-y-8"
-        >
-          <LogBLogo variant="vertical" />
-
-          <div className="space-y-4 text-center max-w-sm">
-            <p className="text-sm font-medium text-slate-500 leading-relaxed">
-              성공하는 비즈니스의 시작, <br />
-              완벽한 기록과 AI 통찰로 성장을 관리하세요.
-            </p>
-          </div>
-
-          <Button
-            size="lg"
-            className="rounded-full px-12 h-14 text-base font-bold shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
-            onClick={() => setIsAuthModalOpen(true)}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col items-center z-10 space-y-8"
           >
-            시작하기
-          </Button>
+            <LogBLogo variant="vertical" />
 
-          <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest pt-8">
-            NEXTIDEALAB PROJECT#2
-          </p>
-        </motion.div>
+            <div className="space-y-4 text-center max-w-sm">
+              <p className="text-sm font-medium text-slate-500 leading-relaxed">
+                성공하는 비즈니스의 시작, <br />
+                완벽한 기록과 AI 통찰로 성장을 관리하세요.
+              </p>
+            </div>
 
-        {/* Auth Dialog */}
-        <Dialog open={isAuthModalOpen} onOpenChange={setIsAuthModalOpen}>
-          <DialogContent className="sm:max-w-md rounded-[32px] p-8">
-            <DialogHeader className="space-y-3 mb-6">
-              <LogBLogo variant="symbol" className="w-10 h-10 mb-2" />
-              <DialogTitle className="text-2xl font-bold tracking-tight">
-                {authMode === 'login' ? '환영합니다' : '계정 생성'}
-              </DialogTitle>
-              <DialogDescription className="text-slate-500 font-medium">
-                {authMode === 'login' ? '본인 확인 후 서비스를 계속하세요' : '로그비와 함께 스마트한 비즈니스를 시작하세요'}
-              </DialogDescription>
-            </DialogHeader>
+            <Button
+              size="lg"
+              className="rounded-full px-12 h-14 text-base font-bold shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
+              onClick={() => setIsAuthModalOpen(true)}
+            >
+              시작하기
+            </Button>
 
-            <div className="space-y-6">
-              <Button
-                variant="outline"
-                className="w-full h-12 rounded-xl font-bold gap-3 border-slate-200"
-                onClick={handleGoogleLogin}
-              >
-                <svg className="w-5 h-5" viewBox="0 0 24 24">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                </svg>
-                Google로 계속하기
-              </Button>
+            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest pt-8">
+              NEXTIDEALAB PROJECT#2
+            </p>
+          </motion.div>
 
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100" /></div>
-                <div className="relative flex justify-center text-[10px] uppercase font-bold text-slate-300 bg-white px-2">OR</div>
-              </div>
+          {/* Auth Dialog */}
+          <Dialog open={isAuthModalOpen} onOpenChange={setIsAuthModalOpen}>
+            <DialogContent className="sm:max-w-md rounded-[32px] p-8">
+              <DialogHeader className="space-y-3 mb-6">
+                <LogBLogo variant="symbol" className="w-10 h-10 mb-2" />
+                <DialogTitle className="text-2xl font-bold tracking-tight">
+                  {authMode === 'login' ? '환영합니다' : '계정 생성'}
+                </DialogTitle>
+                <DialogDescription className="text-slate-500 font-medium">
+                  {authMode === 'login' ? '본인 확인 후 서비스를 계속하세요' : '로그비와 함께 스마트한 비즈니스를 시작하세요'}
+                </DialogDescription>
+              </DialogHeader>
 
-              <form onSubmit={handleEmailAuth} className="space-y-3">
-                {authMode === 'signup' && (
+              <div className="space-y-6">
+                <Button
+                  variant="outline"
+                  className="w-full h-12 rounded-xl font-bold gap-3 border-slate-200"
+                  onClick={handleGoogleLogin}
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                  </svg>
+                  Google로 계속하기
+                </Button>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100" /></div>
+                  <div className="relative flex justify-center text-[10px] uppercase font-bold text-slate-300 bg-white px-2">OR</div>
+                </div>
+
+                <form onSubmit={handleEmailAuth} className="space-y-3">
+                  {authMode === 'signup' && (
+                    <Input
+                      required placeholder="이름" value={name} onChange={e => setName(e.target.value)}
+                      className="h-12 rounded-xl bg-slate-50 border-none font-bold"
+                    />
+                  )}
                   <Input
-                    required placeholder="이름" value={name} onChange={e => setName(e.target.value)}
+                    required type="email" placeholder="이메일" value={email} onChange={e => setEmail(e.target.value)}
                     className="h-12 rounded-xl bg-slate-50 border-none font-bold"
                   />
-                )}
-                <Input
-                  required type="email" placeholder="이메일" value={email} onChange={e => setEmail(e.target.value)}
-                  className="h-12 rounded-xl bg-slate-50 border-none font-bold"
-                />
-                <Input
-                  required type="password" placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)}
-                  className="h-12 rounded-xl bg-slate-50 border-none font-bold"
-                />
-                {authError && <p className="text-[10px] font-bold text-destructive text-center">{authError}</p>}
-                <Button type="submit" className="w-full h-12 rounded-xl font-bold shadow-lg shadow-primary/10 transition-all active:scale-95">
-                  {authMode === 'login' ? '로그인' : '가입하기'}
-                </Button>
-              </form>
+                  <Input
+                    required type="password" placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)}
+                    className="h-12 rounded-xl bg-slate-50 border-none font-bold"
+                  />
+                  {authError && <p className="text-[10px] font-bold text-destructive text-center">{authError}</p>}
+                  <Button type="submit" className="w-full h-12 rounded-xl font-bold shadow-lg shadow-primary/10 transition-all active:scale-95">
+                    {authMode === 'login' ? '로그인' : '가입하기'}
+                  </Button>
+                </form>
 
-              <div className="text-center pt-2">
-                <Button
-                  variant="ghost" size="sm"
-                  className="text-slate-400 font-bold text-[11px] hover:text-primary"
-                  onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
-                >
-                  {authMode === 'login' ? '새 계정이 필요하신가요?' : '이미 계정이 있으신가요?'}
-                </Button>
+                <div className="text-center pt-2">
+                  <Button
+                    variant="ghost" size="sm"
+                    className="text-slate-400 font-bold text-[11px] hover:text-primary"
+                    onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
+                  >
+                    {authMode === 'login' ? '새 계정이 필요하신가요?' : '이미 계정이 있으신가요?'}
+                  </Button>
+                </div>
               </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+        </div>
+        <Footer onOpenTerms={() => setIsTermsOpen(true)} onOpenPrivacy={() => setIsPrivacyOpen(true)} />
       </div>
     );
   }
@@ -501,9 +552,18 @@ export default function App() {
           <div className="flex items-center gap-1.5 sm:gap-2">
             <Button
               size="sm" className="rounded-full shadow-sm px-3"
-              onClick={() => setIsContactModalOpen(true)}
+              onClick={() => {
+                setNewContactData({ name: '', phone: '', email: '' });
+                setIsContactModalOpen(true);
+              }}
             >
               <Plus className="w-3.5 h-3.5 mr-1" strokeWidth={3} /> <span className="inline">거래처</span>
+            </Button>
+            <Button
+              size="sm" variant="outline" className="rounded-full shadow-sm px-3 border-slate-200"
+              onClick={() => { setSelectedContactId(null); setIsScheduleModalOpen(true); }}
+            >
+              <Plus className="w-3.5 h-3.5 mr-1" strokeWidth={3} /> <span className="inline">일정</span>
             </Button>
             <Button
               size="sm" variant="secondary" className="rounded-full shadow-sm bg-slate-800 text-white hover:bg-slate-900 px-3"
@@ -643,12 +703,31 @@ export default function App() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="schedule" className="mt-0 space-y-8 animate-in fade-in duration-500">
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3 px-2">
-                      <CalendarCheck className="text-primary w-5 h-5" />
+                <TabsContent value="schedule" className="mt-0 space-y-6 animate-in fade-in duration-500">
+                  <div className="flex items-center justify-between px-2">
+                    <div className="flex items-center gap-3">
+                      < CalendarCheck className="text-primary w-5 h-5" />
                       <h3 className="text-lg font-bold tracking-tight">전략적 예정 일정</h3>
                     </div>
+                    <div className="bg-slate-100 p-1 rounded-xl flex gap-1">
+                      <Button
+                        variant={scheduleView === 'card' ? 'default' : 'ghost'}
+                        size="sm" className={cn("h-8 rounded-lg text-[10px] font-bold px-3", scheduleView === 'card' && "shadow-sm bg-white text-slate-900 hover:bg-white")}
+                        onClick={() => setScheduleView('card')}
+                      >
+                        리스트
+                      </Button>
+                      <Button
+                        variant={scheduleView === 'calendar' ? 'default' : 'ghost'}
+                        size="sm" className={cn("h-8 rounded-lg text-[10px] font-bold px-3", scheduleView === 'calendar' && "shadow-sm bg-white text-slate-900 hover:bg-white")}
+                        onClick={() => setScheduleView('calendar')}
+                      >
+                        캘린더
+                      </Button>
+                    </div>
+                  </div>
+
+                  {scheduleView === 'card' ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {contacts.filter(c => c.nextSchedule).length === 0 ? (
                         <p className="col-span-full py-12 text-center text-slate-400 text-sm font-medium border border-dashed rounded-3xl">예정된 일정이 없습니다.</p>
@@ -679,7 +758,9 @@ export default function App() {
                           ))
                       )}
                     </div>
-                  </div>
+                  ) : (
+                    <CalendarView contacts={contacts} />
+                  )}
                 </TabsContent>
 
                 <TabsContent value="meetings" className="mt-0 space-y-4 animate-in fade-in duration-500">
@@ -718,6 +799,11 @@ export default function App() {
                       </Button>
                     </CardContent>
                   </Card>
+
+                  {/* Mobile Footer integrated in Settings tab */}
+                  <div className="md:hidden mt-20 mb-12">
+                    <Footer onOpenTerms={() => setIsTermsOpen(true)} onOpenPrivacy={() => setIsPrivacyOpen(true)} />
+                  </div>
                 </TabsContent>
               </Tabs>
             </div>
@@ -747,18 +833,35 @@ export default function App() {
         ))}
       </nav>
 
+      {/* Desktop Dashboard Footer */}
+      <div className="hidden md:block">
+        <Footer onOpenTerms={() => setIsTermsOpen(true)} onOpenPrivacy={() => setIsPrivacyOpen(true)} />
+      </div>
+
+      <LegalModals
+        isTermsOpen={isTermsOpen}
+        setIsTermsOpen={setIsTermsOpen}
+        isPrivacyOpen={isPrivacyOpen}
+        setIsPrivacyOpen={setIsPrivacyOpen}
+      />
+
       {/* Modals */}
       < Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen} >
         <DialogContent className="sm:max-w-xl rounded-[32px] p-8 max-h-[90vh] overflow-y-auto">
           <DialogHeader className="mb-6">
-            <DialogTitle className="text-2xl font-bold tracking-tight italic">새 인맥 등록</DialogTitle>
+            <div className="flex justify-between items-center">
+              <DialogTitle className="text-2xl font-bold tracking-tight italic">새 인맥 등록</DialogTitle>
+              <Button type="button" variant="outline" size="sm" onClick={handleImportContacts} className="rounded-full text-[10px] font-bold h-8">
+                <Upload className="w-3 h-3 mr-1" /> 연락처 가져오기
+              </Button>
+            </div>
             <DialogDescription className="font-medium">기본 인적사항 및 특징을 기록해 두세요.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSaveContact} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">성명</label>
-                <Input required name="name" className="h-12 rounded-xl bg-slate-50 border-none font-bold" />
+                <Input required name="name" value={newContactData.name} onChange={e => setNewContactData({ ...newContactData, name: e.target.value })} className="h-12 rounded-xl bg-slate-50 border-none font-bold" />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">회사/기관</label>
@@ -772,11 +875,11 @@ export default function App() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">대표 번호</label>
-                <Input name="phone" placeholder="010-" className="h-12 rounded-xl bg-slate-50 border-none font-bold text-sm" />
+                <Input name="phone" placeholder="010-" value={newContactData.phone} onChange={e => setNewContactData({ ...newContactData, phone: e.target.value })} className="h-12 rounded-xl bg-slate-50 border-none font-bold text-sm" />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">이메일</label>
-                <Input type="email" name="email" placeholder="@" className="h-12 rounded-xl bg-slate-50 border-none font-bold text-sm" />
+                <Input type="email" name="email" placeholder="@" value={newContactData.email} onChange={e => setNewContactData({ ...newContactData, email: e.target.value })} className="h-12 rounded-xl bg-slate-50 border-none font-bold text-sm" />
               </div>
             </div>
             <div className="space-y-2">
@@ -851,6 +954,36 @@ export default function App() {
                 className="w-full h-16 rounded-[24px] font-bold text-lg shadow-xl shadow-slate-200 transition-all active:scale-95 disabled:opacity-50"
               >
                 {isAiGenerating ? <><Loader2 className="animate-spin mr-2" /> AI 분석 생성 중...</> : "인텔 로그 동기화"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isScheduleModalOpen} onOpenChange={setIsScheduleModalOpen}>
+        <DialogContent className="sm:max-w-md rounded-[32px] p-8">
+          <DialogHeader className="mb-6">
+            <DialogTitle className="text-2xl font-bold tracking-tight italic">팔로업 일정 등록</DialogTitle>
+            <DialogDescription className="font-medium">다음 미팅이나 연락 일정을 잡아두세요.</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSaveSchedule} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">대상 거래처 선택</label>
+              <select
+                name="contactId" required defaultValue={selectedContactId || ""}
+                className="w-full h-12 px-4 rounded-xl bg-slate-50 border-none font-bold text-sm text-slate-700 outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+              >
+                <option value="" disabled>디렉토리에서 선택</option>
+                {contacts.map(c => <option key={c.id} value={c.id}>{c.name} ({c.company})</option>)}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">예정 날짜</label>
+              <Input type="date" name="date" required className="h-12 rounded-xl bg-slate-50 border-none font-bold" />
+            </div>
+            <div className="pt-4">
+              <Button type="submit" className="w-full h-14 rounded-2xl font-bold shadow-lg shadow-primary/20 text-base">
+                일정 확정
               </Button>
             </div>
           </form>
@@ -1007,4 +1140,301 @@ const MeetingCard = ({ meeting, onDelete }: { meeting: Meeting, onDelete: () => 
       )}
     </CardContent>
   </Card>
+);
+
+const CalendarView = ({ contacts }: { contacts: Contact[] }) => {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  const daysInMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  const firstDayOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+
+  const prevMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+  const nextMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
+
+  const days = Array.from({ length: daysInMonth(currentMonth) }, (_, i) => i + 1);
+  const blanks = Array.from({ length: firstDayOfMonth(currentMonth) }, (_, i) => i);
+
+  const getSchedulesForDay = (day: number) => {
+    const dateStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return contacts.filter(c => c.nextSchedule === dateStr);
+  };
+
+  return (
+    <Card className="rounded-[32px] border-slate-100 shadow-sm p-4 md:p-6 bg-white overflow-hidden">
+      <div className="flex items-center justify-between mb-6 px-2">
+        <h4 className="text-lg font-black text-slate-800 tracking-tight">
+          {currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월
+        </h4>
+        <div className="flex gap-1">
+          <Button variant="ghost" size="icon" onClick={prevMonth} className="rounded-full h-8 w-8"><ChevronLeft size={18} /></Button>
+          <Button variant="ghost" size="icon" onClick={nextMonth} className="rounded-full h-8 w-8"><ChevronRight size={18} /></Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-7 gap-1 mb-2">
+        {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
+          <div key={day} className={cn("text-center text-[10px] font-bold text-slate-400 py-2", i === 0 && "text-red-400", i === 6 && "text-blue-400")}>
+            {day}
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-7 gap-1">
+        {blanks.map(i => <div key={`blank-${i}`} className="h-20 sm:h-24 md:h-28" />)}
+        {days.map(day => {
+          const schedules = getSchedulesForDay(day);
+          const isToday = new Date().toDateString() === new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day).toDateString();
+
+          return (
+            <div
+              key={day}
+              className={cn(
+                "h-20 sm:h-24 md:h-28 bg-slate-50/50 rounded-2xl p-1.5 flex flex-col gap-1 transition-all border border-transparent",
+                isToday && "bg-primary/5 border-primary/20 ring-1 ring-primary/10"
+              )}
+            >
+              <span className={cn(
+                "text-[11px] font-black ml-1 mt-0.5",
+                isToday ? "text-primary" : "text-slate-500"
+              )}>
+                {day}
+              </span>
+              <div className="flex-1 overflow-y-auto space-y-1 scrollbar-hide">
+                {schedules.map(c => (
+                  <div key={c.id} className="bg-white px-2 py-1 rounded-lg text-[9px] font-bold text-slate-700 shadow-sm border border-slate-100 truncate flex items-center gap-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                    <span className="truncate">{c.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+};
+
+// --- Footer & Legal Components ---
+
+const Footer = ({ onOpenTerms, onOpenPrivacy }: { onOpenTerms: () => void, onOpenPrivacy: () => void }) => {
+  return (
+    <footer className="w-full bg-white border-t border-slate-200 pt-16 pb-32 md:pb-16 mt-20">
+      <div className="max-w-screen-xl mx-auto px-6 md:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+          {/* Brand Side */}
+          <div className="space-y-4">
+            <LogBLogo variant="horizontal" />
+            <p className="text-sm text-slate-400 leading-relaxed max-w-sm font-medium">
+              Log:B는 당신의 모든 비즈니스 대화와 일정을 자산으로 만드는 스마트 세일즈 인텔리전스 레이어입니다.
+            </p>
+          </div>
+
+          {/* Info Side */}
+          <div className="grid grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-widest">Legal</h4>
+              <ul className="space-y-3">
+                <li>
+                  <button onClick={onOpenTerms} className="text-sm text-slate-500 hover:text-indigo-600 font-bold flex items-center gap-1.5 transition-colors">
+                    <FileText size={14} /> 이용약관
+                  </button>
+                </li>
+                <li>
+                  <button onClick={onOpenPrivacy} className="text-sm text-slate-500 hover:text-indigo-600 font-bold flex items-center gap-1.5 transition-colors">
+                    <ShieldCheck size={14} /> 개인정보처리방침
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-widest">Contact</h4>
+              <ul className="space-y-3">
+                <li>
+                  <a href="mailto:support@log-b.ai" className="text-sm text-slate-500 hover:text-indigo-600 font-bold flex items-center gap-1.5 transition-colors">
+                    <Mail size={14} /> 고객센터
+                  </a>
+                </li>
+                <li>
+                  <a href="https://log-biz.vercel.app" target="_blank" className="text-sm text-slate-500 hover:text-indigo-600 font-bold flex items-center gap-1.5 transition-colors">
+                    <ExternalLink size={14} /> 서비스 홈
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Business Info Layer (Common for B2B) */}
+        <div className="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="space-y-1">
+            <p className="text-[11px] text-slate-400 font-bold tracking-tight">
+              회사: (주)루시퍼 | 이메일: nextidealab.ai@gmail.com
+            </p>
+            <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">
+              &copy; 2026 Next Idea Lab By Lucifer Co., Ltd. All Rights Reserved.
+            </p>
+          </div>
+          <div className="flex items-center gap-4 opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+            <div className="text-[10px] font-black border border-slate-400 px-2 py-0.5 rounded">SSL SECURE</div>
+            <div className="text-[10px] font-black border border-slate-400 px-2 py-0.5 rounded">FIREBASE CLOUD</div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+const LegalModals = ({
+  isTermsOpen, setIsTermsOpen,
+  isPrivacyOpen, setIsPrivacyOpen
+}: {
+  isTermsOpen: boolean, setIsTermsOpen: (v: boolean) => void,
+  isPrivacyOpen: boolean, setIsPrivacyOpen: (v: boolean) => void
+}) => (
+  <>
+    <Dialog open={isTermsOpen} onOpenChange={setIsTermsOpen}>
+      <DialogContent className="sm:max-w-2xl rounded-[32px] p-8 max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-black tracking-tight">서비스 이용약관</DialogTitle>
+        </DialogHeader>
+        <div className="mt-8 text-sm text-slate-600 font-medium leading-relaxed space-y-6">
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">제1조 (목적)</h3>
+            <p>본 약관은 Log:B(이하 "서비스")가 제공하는 제반 서비스의 이용과 관련하여 서비스와 회원 사이의 권리, 의무 및 책임 사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">제2조 (용어의 정의)</h3>
+            <ol className="list-decimal list-inside space-y-2">
+              <li>"서비스"라 함은 회원이 비즈니스 거래처 정보를 관리하고 미팅 내용을 기록/분석할 수 있도록 제공되는 'Log:B' 웹 서비스를 의미합니다.</li>
+              <li>"회원"이라 함은 본 약관에 동의하고 서비스를 이용하는 이용자를 말합니다.</li>
+            </ol>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">제3조 (약관의 효력 및 변경)</h3>
+            <ol className="list-decimal list-inside space-y-2">
+              <li>본 약관은 서비스 내에 게시하거나 기타의 방법으로 회원에게 공지함으로써 효력이 발생합니다.</li>
+              <li>서비스는 필요하다고 인정되는 경우 관련 법령을 위배하지 않는 범위 내에서 약관을 변경할 수 있습니다.</li>
+            </ol>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">제4조 (서비스의 내용 및 변경)</h3>
+            <ol className="list-decimal list-inside space-y-2">
+              <li>서비스는 다음과 같은 기능을 제공합니다.
+                <ul className="list-disc list-inside ml-6 mt-1 opacity-80">
+                  <li>거래처 정보 관리 및 일괄 등록(CSV)</li>
+                  <li>음성 및 텍스트 기반 미팅 리포트 작성</li>
+                  <li>AI 기반 미팅 요약 및 비즈니스 인사이트 도출</li>
+                  <li>일정 관리 및 대시보드 제공</li>
+                </ul>
+              </li>
+              <li>서비스는 기술적 사양의 변경이나 운영상 필요에 따라 서비스의 내용을 변경할 수 있습니다.</li>
+            </ol>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">제5조 (개인정보 보호)</h3>
+            <p>서비스는 회원의 개인정보를 보호하기 위해 노력하며, 개인정보의 보호 및 사용에 대해서는 관련 법령 및 "개인정보처리방침"에 따릅니다.</p>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">제6조 (서비스 이용의 제한 및 중단)</h3>
+            <ol className="list-decimal list-inside space-y-2">
+              <li>회원이 서비스의 정상적인 운영을 방해하거나 타인의 권리를 침해하는 경우 서비스 이용을 제한할 수 있습니다.</li>
+              <li>시스템 점검, 교체 및 고장, 통신두절 등의 사유가 발생한 경우 서비스 제공을 일시적으로 중단할 수 있습니다.</li>
+            </ol>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">제7조 (책임 제한 및 면책)</h3>
+            <ol className="list-decimal list-inside space-y-2">
+              <li>서비스는 천재지변, 전시, 기타 이에 준하는 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.</li>
+              <li>서비스는 AI 기능을 통해 제공되는 요약 및 분석 결과의 완전성, 정확성, 유용성에 대해 보증하지 않으며, 이를 신뢰하여 발생한 결과에 대해 책임을 지지 않습니다.</li>
+              <li>회원이 서비스에 저장한 데이터의 관리 책임은 회원 본인에게 있으며, 회원의 부주의로 인한 데이터 유출이나 삭제에 대해 서비스는 책임을 지지 않습니다.</li>
+            </ol>
+          </section>
+
+          <footer className="pt-6 border-t border-slate-100 text-[11px] font-bold text-slate-400">
+            <p>공고일자: 2024년 5월 22일</p>
+            <p>시행일자: 2024년 5월 22일</p>
+          </footer>
+        </div>
+        <div className="mt-8 sticky bottom-0 pt-4 bg-white">
+          <Button onClick={() => setIsTermsOpen(false)} className="w-full h-14 rounded-2xl font-black text-base shadow-xl shadow-primary/10">약관 동의 및 확인</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+
+    <Dialog open={isPrivacyOpen} onOpenChange={setIsPrivacyOpen}>
+      <DialogContent className="sm:max-w-2xl rounded-[32px] p-8 max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-black tracking-tight">개인정보처리방침</DialogTitle>
+        </DialogHeader>
+        <div className="mt-8 text-sm text-slate-600 font-medium leading-relaxed space-y-6">
+          <p className="p-4 bg-slate-50 rounded-2xl border border-slate-100 italic">
+            Log:B(이하 "서비스")는 이용자의 개인정보를 소중히 다루며, 「개인정보 보호법」 등 관련 법령을 준수합니다. 본 방침을 통해 회원이 제공하는 개인정보가 어떤 용도와 방식으로 이용되고 있으며, 보호를 위해 어떤 조치가 취해지고 있는지 알려드립니다.
+          </p>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">1. 수집하는 개인정보 항목 및 수집방법</h3>
+            <ul className="list-disc list-inside space-y-2">
+              <li><strong>수집 항목:</strong> (필수) 이메일 주소, 이름, 프로필 사진 (Google 로그인 연동 시)</li>
+              <li className="ml-6 opacity-80">(선택) 서비스 이용 기록, 접속 로그, 쿠키, 접속 IP 정보</li>
+              <li><strong>수집 방법:</strong> 홈페이지(구글 로그인), 서비스 이용 과정에서의 자동 생성</li>
+            </ul>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">2. 개인정보의 수집 및 이용목적</h3>
+            <ol className="list-decimal list-inside space-y-2">
+              <li>회원 가입 의사 확인 및 본인 식별</li>
+              <li>비즈니스 로그 관리, AI 요약 리포트 제공 등 서비스 핵심 기능 제공</li>
+              <li>서비스 이용 통계 분석 및 품질 개선</li>
+              <li>불량 이용 방지 및 비인가 사용 방지</li>
+            </ol>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">3. 개인정보의 보유 및 이용기간</h3>
+            <p>회원의 개인정보는 원칙적으로 회원 탈퇴 시까지 보유하며, 목적 달성 시 지체 없이 파기합니다. 단, 관계 법령에 따라 보존할 필요가 있는 경우 해당 기간 동안 보관합니다.</p>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">4. 데이터 저장 및 제3자 제공 (Firebase & Google)</h3>
+            <p>서비스는 안정적인 데이터 관리와 AI 기능 제공을 위해 다음과 같이 외부 인프라를 활용합니다.</p>
+            <ul className="list-disc list-inside space-y-2">
+              <li><strong>수탁업체: Google Cloud (Firebase)</strong><br /><span className="ml-6 text-xs text-slate-400">데이터 클라우드 저장, 사용자 인증 관리</span></li>
+              <li><strong>수탁업체: Google Gemini API</strong><br /><span className="ml-6 text-xs text-slate-400">미팅 기록의 텍스트 요약 및 비즈니스 조언 생성 (AI 학습 비재사용 설정)</span></li>
+            </ul>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">5. 이용자의 권리와 의무</h3>
+            <p>이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있으며, 회원 탈퇴를 통해 개인정보 이용에 대한 동의를 철회할 수 있습니다.</p>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">6. 개인정보의 파기절차 및 방법</h3>
+            <p>회원이 탈퇴하거나 개인정보 보유 기간이 경과된 경우, 전자적 파일 형태의 정보는 기록을 재생할 수 없는 기술적 방법을 사용하여 파기합니다.</p>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-base font-bold text-slate-900">7. 쿠키(Cookie)의 운용 및 거부</h3>
+            <p>서비스는 개인화된 서비스 제공을 위해 쿠키를 사용하며, 회원은 브라우저 설정을 통해 쿠키 저장을 거부할 수 있습니다. 단, 이 경우 서비스 이용에 일부 제한이 있을 수 있습니다.</p>
+          </section>
+
+          <footer className="pt-6 border-t border-slate-100 text-[11px] font-bold text-slate-400">
+            <p>이메일 문의: support@log-b.ai</p>
+            <p>버전번호: 1.0 | 최종 업데이트: 2024년 5월 22일</p>
+          </footer>
+        </div>
+        <div className="mt-8 sticky bottom-0 pt-4 bg-white">
+          <Button onClick={() => setIsPrivacyOpen(false)} className="w-full h-14 rounded-2xl font-black text-base shadow-xl shadow-primary/10">확인 및 닫기</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  </>
 );

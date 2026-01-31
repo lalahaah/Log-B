@@ -16,6 +16,10 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "Log:B",
   },
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/LogB_AppIcon.png",
+  },
   formatDetection: {
     telephone: false,
   },

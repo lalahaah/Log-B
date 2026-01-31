@@ -11,10 +11,13 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+// 빌드 시점에 API Key가 없어도 에러가 나지 않도록 방어 처리
+const app = (typeof window !== "undefined" || process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
+    ? (getApps().length > 0 ? getApp() : initializeApp(firebaseConfig))
+    : null;
+
+const auth = (app ? getAuth(app) : null) as any;
+const db = (app ? getFirestore(app) : null) as any;
 const googleProvider = new GoogleAuthProvider();
 
 export { auth, db, app, googleProvider };

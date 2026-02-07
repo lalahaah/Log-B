@@ -9,6 +9,7 @@ import 'screens/auth_screen.dart';
 import 'screens/directory_tab.dart';
 import 'screens/reports_tab.dart';
 import 'screens/schedule_tab.dart';
+import 'screens/settings_tab.dart';
 
 // --- Log,B Brand Design System (Green Edition) ---
 class LogBTheme {
@@ -295,9 +296,4 @@ class _MainNavigationFrameState extends State<MainNavigationFrame> {
 
 // ReportsTab은 screens/reports_tab.dart에서 정의됨
 
-class SettingsTab extends StatelessWidget {
-  const SettingsTab({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Center(child: Text("보안 설정 및 동기화"));
-}
+// SettingsTab은 screens/settings_tab.dart에서 정의됨

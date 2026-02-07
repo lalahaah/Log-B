@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "999485288786",
+    "project_id": "log-b-4de05",
+    "storage_bucket": "log-b-4de05.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999485288786:android:3e741616993518dbda0a8b",
+        "android_client_info": {
+          "package_name": "com.logb.log_b"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999485288786-mqe6keaeeaitgae8lpqqag16g2cn62dg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDASA4-ixldgAkUHfGhHXg496AKV-Cch0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999485288786-mqe6keaeeaitgae8lpqqag16g2cn62dg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

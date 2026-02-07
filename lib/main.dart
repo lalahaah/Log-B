@@ -2,6 +2,10 @@
 // import 'dart:convert';
 import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
+import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_auth/firebase_auth.dart'; // auth_screen.dart에서 사용
+import 'firebase_options.dart';
+import 'screens/auth_screen.dart';
 
 // --- Log,B Brand Design System (Green Edition) ---
 class LogBTheme {
@@ -24,7 +28,9 @@ class LogBTheme {
   );
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const LogBApp());
 }
 
@@ -94,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen>
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                const MainNavigationFrame(),
+                const AuthGate(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   return FadeTransition(opacity: animation, child: child);

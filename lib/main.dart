@@ -210,8 +210,8 @@ class _MainNavigationFrameState extends State<MainNavigationFrame> {
 
   final List<Widget> _screens = [
     const DirectoryTab(),
-    const ScheduleTab(),
     const ReportsTab(),
+    const ScheduleTab(),
     const SettingsTab(),
   ];
 
@@ -241,13 +241,13 @@ class _MainNavigationFrameState extends State<MainNavigationFrame> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _navItem(0, Icons.people_outline, Icons.people, "인맥"),
+            _navItem(1, Icons.chat_bubble_outline, Icons.chat_bubble, "기록"),
             _navItem(
-              1,
+              2,
               Icons.calendar_today_outlined,
               Icons.calendar_today,
               "일정",
             ),
-            _navItem(2, Icons.chat_bubble_outline, Icons.chat_bubble, "기록"),
             _navItem(3, Icons.settings_outlined, Icons.settings, "설정"),
           ],
         ),

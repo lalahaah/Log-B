@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../main.dart';
 import '../models/meeting_log.dart';
 import '../models/partner.dart';
@@ -56,15 +57,14 @@ class _ReportsTabState extends State<ReportsTab> {
         final MeetingLog meetingLog = result['log'];
         final MeetingSchedule? nextSchedule = result['nextSchedule'];
 
-        if (log == null) {
-          // 다음 일정이 있으면 먼저 저장하고 ID를 받아옴
-          String? nextMeetingId;
-          if (nextSchedule != null) {
-            nextMeetingId = await MeetingScheduleRepository().addSchedule(
-              nextSchedule,
-            );
-          }
+        String? nextMeetingId;
+        if (nextSchedule != null) {
+          nextMeetingId = await MeetingScheduleRepository().addSchedule(
+            nextSchedule,
+          );
+        }
 
+        if (log == null) {
           final logWithNext = meetingLog.copyWith(nextMeetingId: nextMeetingId);
           await _logRepository.addLog(logWithNext);
 
@@ -77,7 +77,12 @@ class _ReportsTabState extends State<ReportsTab> {
             );
           }
         } else {
-          await _logRepository.updateLog(meetingLog);
+          // 기존 로그 수정 시에도 다음 일정이 새로 추가되었다면 ID 반영
+          final updatedLog = nextMeetingId != null
+              ? meetingLog.copyWith(nextMeetingId: nextMeetingId)
+              : meetingLog;
+          await _logRepository.updateLog(updatedLog);
+
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -139,6 +144,77 @@ class _ReportsTabState extends State<ReportsTab> {
     if (confirm == true && mounted) {
       await _logRepository.deleteLog(log.id);
     }
+  }
+
+  Future<void> _showAttachmentsDialog(MeetingLog log) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: isDark ? LogBTheme.slate900 : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Text(
+          '첨부파일 확인',
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontFamily: 'Pretendard',
+          ),
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (log.imageUrls.isNotEmpty) ...[
+                  const ListTile(
+                    title: Text(
+                      '이미지',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  ...log.imageUrls.asMap().entries.map(
+                    (entry) => ListTile(
+                      leading: const Icon(
+                        Icons.image,
+                        color: LogBTheme.emerald600,
+                      ),
+                      title: Text('이미지 ${entry.key + 1}'),
+                      onTap: () => launchUrl(Uri.parse(entry.value)),
+                    ),
+                  ),
+                ],
+                if (log.fileUrls.isNotEmpty) ...[
+                  const ListTile(
+                    title: Text(
+                      '파일',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  ...log.fileUrls.asMap().entries.map(
+                    (entry) => ListTile(
+                      leading: const Icon(
+                        Icons.insert_drive_file,
+                        color: LogBTheme.emerald600,
+                      ),
+                      title: Text('파일 ${entry.key + 1}'),
+                      onTap: () => launchUrl(Uri.parse(entry.value)),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('닫기'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -328,10 +404,46 @@ class _ReportsTabState extends State<ReportsTab> {
                   ),
                   const Spacer(),
                   if (log.imageUrls.isNotEmpty || log.fileUrls.isNotEmpty)
-                    const Icon(
-                      Icons.attach_file,
-                      size: 16,
-                      color: LogBTheme.emerald600,
+                    GestureDetector(
+                      onTap: () => _showAttachmentsDialog(log),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: LogBTheme.emerald600,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: LogBTheme.emerald600.withValues(
+                                alpha: 0.2,
+                              ),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.attach_file,
+                              size: 14,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${log.imageUrls.length + log.fileUrls.length}',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                 ],
               ),
@@ -442,7 +554,8 @@ class _AddLogDialogState extends State<AddLogDialog> {
     }
     _filteredPartners = widget.partners;
 
-    // 다음 일정 초기화
+    // 다음 일정 초기화 - 기존 로그에 다음 미팅 ID가 있으면 활성화된 것처럼 보여줌 (다만 실제 상세 조회는 파라미터 필요)
+    _addNextMeeting = widget.log?.nextMeetingId != null;
     _nextTitleController = TextEditingController();
     _nextDate = DateTime.now().add(const Duration(days: 7));
     _nextStartTime = const TimeOfDay(hour: 14, minute: 0);
@@ -674,6 +787,25 @@ class _AddLogDialogState extends State<AddLogDialog> {
                               ),
                             ),
                         ],
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Meeting Date
+                      _buildSectionLabel('미팅 날짜', isDark),
+                      const SizedBox(height: 8),
+                      _buildPickerButton(
+                        Icons.calendar_today,
+                        DateFormat('yyyy년 MM월 dd일').format(_selectedDate),
+                        () async {
+                          final d = await showDatePicker(
+                            context: context,
+                            initialDate: _selectedDate,
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime(2030),
+                          );
+                          if (d != null) setState(() => _selectedDate = d);
+                        },
+                        isDark,
                       ),
                       const SizedBox(height: 24),
 

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log,B Logo Assets - Green Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .logo-font { font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.05em; }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-12 border-b border-slate-200 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <h1 class="text-4xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                    Log<span class="text-emerald-600">,</span>B <span class="text-slate-400 font-light">Green Edition</span>
+                </h1>
+                <p class="text-slate-500 mt-3 font-medium text-lg italic">"비즈니스의 성장을 기록하고 연결하는 쉼표"</p>
+            </div>
+            <div class="text-[10px] font-black uppercase tracking-[0.3em] text-white bg-emerald-600 px-4 py-1.5 rounded-full shadow-lg shadow-emerald-100">
+                Official Identity v3.0
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            
+            <!-- 1. Primary Signature (Light Mode) -->
+            <div class="bg-white rounded-[48px] p-10 shadow-sm border border-slate-200 flex flex-col transition-all hover:shadow-2xl hover:-translate-y-1">
+                <div class="flex-1 flex items-center justify-center p-8 bg-slate-50 rounded-[32px] mb-8 min-h-[200px]">
+                    <svg width="260" height="80" viewBox="0 0 260 80" xmlns="http://www.w3.org/2000/svg" id="svg-light">
+                        <defs>
+                            <linearGradient id="grad_green" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#059669" />
+                                <stop offset="100%" stop-color="#10B981" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Symbol Box -->
+                        <rect x="10" y="10" width="60" height="60" rx="18" fill="url(#grad_green)" />
+                        <!-- Centered Comma -->
+                        <g transform="translate(33, 28) scale(0.65)">
+                            <path d="M28 10C28 4.47715 23.5228 0 18 0C12.4772 0 8 4.47715 8 10C8 15.5228 12.4772 20 18 20C18 32 10 42 0 45" 
+                                  stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </g>
+                        <!-- Text Logo -->
+                        <text x="85" y="52" fill="#1E293B" class="logo-font" style="font-size: 44px; font-family: Inter, sans-serif; font-weight: 900;">Log<tspan fill="#10B981" style="font-style: italic;">,</tspan>B</text>
+                    </svg>
+                </div>
+                <h3 class="font-black text-slate-800 text-lg mb-2 tracking-tight">Primary Signature</h3>
+                <p class="text-xs text-slate-400 mb-8 font-medium">밝은 배경용 메인 시그니처 (Light Mode)</p>
+                <div class="grid grid-cols-2 gap-3 mt-auto">
+                    <button onclick="downloadSVG('svg-light', 'LogB_Green_Primary')" class="py-3.5 bg-slate-900 text-white rounded-2xl text-xs font-black hover:bg-emerald-600 transition-all uppercase tracking-widest">SVG</button>
+                    <button onclick="downloadPNG('svg-light', 'LogB_Green_Primary')" class="py-3.5 bg-slate-100 text-slate-700 rounded-2xl text-xs font-black hover:bg-slate-200 transition-all uppercase tracking-widest">PNG</button>
+                </div>
+            </div>
+
+            <!-- 2. Dark Mode Signature -->
+            <div class="bg-[#0F172A] rounded-[48px] p-10 shadow-sm border border-slate-800 flex flex-col transition-all hover:shadow-2xl hover:-translate-y-1">
+                <div class="flex-1 flex items-center justify-center p-8 bg-slate-900/50 rounded-[32px] mb-8 min-h-[200px]">
+                    <svg width="260" height="80" viewBox="0 0 260 80" xmlns="http://www.w3.org/2000/svg" id="svg-dark">
+                        <!-- Symbol Box (Higher Contrast for Dark Mode) -->
+                        <rect x="10" y="10" width="60" height="60" rx="18" fill="#10B981" />
+                        <g transform="translate(33, 28) scale(0.65)">
+                            <path d="M28 10C28 4.47715 23.5228 0 18 0C12.4772 0 8 4.47715 8 10C8 15.5228 12.4772 20 18 20C18 32 10 42 0 45" 
+                                  stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </g>
+                        <!-- White Text with Green Comma -->
+                        <text x="85" y="52" fill="white" class="logo-font" style="font-size: 44px; font-family: Inter, sans-serif; font-weight: 900;">Log<tspan fill="#10B981" style="font-style: italic;">,</tspan>B</text>
+                    </svg>
+                </div>
+                <h3 class="font-black text-white text-lg mb-2 tracking-tight">Dark Mode Signature</h3>
+                <p class="text-xs text-slate-500 mb-8 font-medium">어두운 테마 및 대시보드용 (Dark Mode)</p>
+                <div class="grid grid-cols-2 gap-3 mt-auto">
+                    <button onclick="downloadSVG('svg-dark', 'LogB_Green_Dark')" class="py-3.5 bg-white text-slate-900 rounded-2xl text-xs font-black hover:bg-emerald-50 transition-all uppercase tracking-widest">SVG</button>
+                    <button onclick="downloadPNG('svg-dark', 'LogB_Green_Dark')" class="py-3.5 bg-slate-800 text-white rounded-2xl text-xs font-black hover:bg-slate-700 transition-all uppercase tracking-widest">PNG</button>
+                </div>
+            </div>
+
+            <!-- 3. App Icon Symbol -->
+            <div class="bg-white rounded-[48px] p-10 shadow-sm border border-slate-200 flex flex-col transition-all hover:shadow-2xl hover:-translate-y-1">
+                <div class="flex-1 flex items-center justify-center p-8 bg-slate-50 rounded-[32px] mb-8 min-h-[200px]">
+                    <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" id="svg-icon">
+                        <rect width="100" height="100" rx="28" fill="#10B981" />
+                        <g transform="translate(32, 28) scale(1.1)">
+                            <path d="M28 10C28 4.47715 23.5228 0 18 0C12.4772 0 8 4.47715 8 10C8 15.5228 12.4772 20 18 20C18 32 10 42 0 45" 
+                                  stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </g>
+                    </svg>
+                </div>
+                <h3 class="font-black text-slate-800 text-lg mb-2 tracking-tight">App Icon</h3>
+                <p class="text-xs text-slate-400 mb-8 font-medium">모바일 앱 설치 아이콘 및 프로필용</p>
+                <div class="grid grid-cols-2 gap-3 mt-auto">
+                    <button onclick="downloadSVG('svg-icon', 'LogB_Green_Icon')" class="py-3.5 bg-slate-900 text-white rounded-2xl text-xs font-black hover:bg-emerald-600 transition-all uppercase tracking-widest">SVG</button>
+                    <button onclick="downloadPNG('svg-icon', 'LogB_Green_Icon')" class="py-3.5 bg-slate-100 text-slate-700 rounded-2xl text-xs font-black hover:bg-slate-200 transition-all uppercase tracking-widest">PNG</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Green Edition Strategy Guideline -->
+        <section class="mt-20 bg-emerald-950 rounded-[56px] p-12 text-white overflow-hidden relative">
+            <div class="relative z-10">
+                <h2 class="text-3xl font-black mb-8 tracking-tighter">Green Identity Guideline</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-5">
+                            <div class="w-14 h-14 bg-emerald-500 rounded-2xl shadow-lg shadow-emerald-500/20"></div>
+                            <div>
+                                <h4 class="text-sm font-black text-emerald-400 uppercase tracking-widest">Primary Emerald</h4>
+                                <p class="text-xs text-slate-300 font-bold">Emerald Green (#10B981) - 비즈니스 성장과 유연성</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-5">
+                            <div class="w-14 h-14 bg-emerald-700 rounded-2xl shadow-lg shadow-emerald-900/20"></div>
+                            <div>
+                                <h4 class="text-sm font-black text-emerald-400 uppercase tracking-widest">Deep Forest</h4>
+                                <p class="text-xs text-slate-300 font-bold">Forest Green (#059669) - 데이터 보안과 신뢰감</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <h4 class="text-sm font-black text-emerald-400 uppercase tracking-widest">Design Philosophy</h4>
+                        <p class="text-sm text-slate-300 leading-relaxed font-medium">
+                            에메랄드 그린은 비즈니스 현장에서의 **'긍정적인 기회'**를 의미합니다. <span class="text-emerald-400 font-black">쉼표 심볼(,)</span>은 단순히 멈추는 것이 아니라, 과거의 기록을 발판 삼아 더 큰 성과로 나아가는 연결 고리를 상징합니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- Decorative Symbol Background -->
+            <div class="absolute right-[-40px] bottom-[-40px] opacity-[0.05] rotate-12">
+                <svg width="400" height="400" viewBox="0 0 100 100">
+                    <path d="M28 10C28 4.47715 23.5228 0 18 0C12.4772 0 8 4.47715 8 10C8 15.5228 12.4772 20 18 20C18 32 10 42 0 45" 
+                          stroke="white" stroke-width="10" stroke-linecap="round" fill="none"/>
+                </svg>
+            </div>
+        </section>
+
+        <footer class="mt-20 border-t border-slate-200 pt-10 text-center pb-12">
+            <p class="text-[11px] text-slate-400 font-black uppercase tracking-[0.4em]">Log,B Smart Sales Infrastructure &copy; 2026</p>
+        </footer>
+    </div>
+
+    <canvas id="export-canvas" class="hidden"></canvas>
+
+    <script>
+        function downloadSVG(id, filename) {
+            const svg = document.getElementById(id);
+            const serializer = new XMLSerializer();
+            let source = serializer.serializeToString(svg);
+            if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+                source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+            }
+            source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+            const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = filename + ".svg";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadPNG(id, filename) {
+            const svg = document.getElementById(id);
+            const canvas = document.getElementById('export-canvas');
+            const ctx = canvas.getContext('2d');
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const img = new Image();
+            const svgSize = svg.getBoundingClientRect();
+            
+            const scale = 4;
+            canvas.width = svgSize.width * scale;
+            canvas.height = svgSize.height * scale;
+            
+            img.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.scale(scale, scale);
+                ctx.drawImage(img, 0, 0);
+                const pngUrl = canvas.toDataURL("image/png");
+                const link = document.createElement("a");
+                link.href = pngUrl;
+                link.download = filename + ".png";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+            img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
+        }
+    </script>
+</body>
+</html>

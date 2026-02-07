@@ -1,7 +1,17 @@
-<?xml version="1.0" standalone="no"?>
-<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" id="svg-icon">
-                        <rect width="100" height="100" rx="28" fill="#10B981"/>
-                        <g transform="translate(32, 28) scale(1.1)">
-                            <path d="M28 10C28 4.47715 23.5228 0 18 0C12.4772 0 8 4.47715 8 10C8 15.5228 12.4772 20 18 20C18 32 10 42 0 45" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<svg width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" id="svg-green-bg">
+                        <defs>
+                            <linearGradient id="grad_green_main" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#059669"/>
+                                <stop offset="100%" stop-color="#10B981"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Background -->
+                        <rect width="100" height="100" rx="28" fill="url(#grad_green_main)"/>
+                        
+                        <!-- Clean Geometric Comma -->
+                        <g transform="translate(18, 12) scale(0.9)">
+                            <path d="M30 0H75V55C75 80 55 100 30 100H28V75C45 75 55 65 55 50V35H30V0Z" fill="#FFFFFF"/>
+                            <!-- Central Log Point -->
+                            <circle cx="52.5" cy="25" r="7" fill="url(#grad_green_main)"/>
                         </g>
                     </svg>
